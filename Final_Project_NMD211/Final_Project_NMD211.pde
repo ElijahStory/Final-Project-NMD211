@@ -8,27 +8,25 @@
 //Inspiration from: https://forum.processing.org/two/discussion/22644/two-keys-pressed-three-keys-pressed-simultaneously
 
 
-float x;                   //the x cords of the dot 
-float y;                   //the y cords of the dot
 float[] keys = {0,0,0,0};  //index order 0=w, 1=a, 2=s, 3=d
 float speed = 2;           //speed the dot moves
+player user;
 
 void setup(){
   size(800,800);
   
-  x = width/2;             //starting in the midle of screen
-  y = height/2;            //starting in the midle of screen
+  user = new player(width/2,height/2);
 }
 
 void draw(){
   background(255);
   fill(0);
-  ellipse(x,y,10,10);              //draws the dot
+  ellipse(user.getX(),user.getY(),10,10);              //draws the dot
   
-  if(keys[0] != 0){y -= keys[0];}  //if the w key is pressed
-  if(keys[1] != 0){x -= keys[1];}  //if the a key is pressed
-  if(keys[2] != 0){y += keys[2];}  //if the s key is pressed
-  if(keys[3] != 0){x += keys[3];}  //if the d key is pressed
+  if(keys[0] != 0){user.addY(-keys[0]);}  //if the w key is pressed
+  if(keys[1] != 0){user.addX(-keys[1]);}  //if the a key is pressed
+  if(keys[2] != 0){user.addY(keys[2]);}  //if the s key is pressed
+  if(keys[3] != 0){user.addX(keys[3]);}  //if the d key is pressed
 }
 
 //updates the array based on the key press
