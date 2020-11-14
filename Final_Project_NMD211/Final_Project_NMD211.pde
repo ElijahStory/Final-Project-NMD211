@@ -11,6 +11,7 @@
 float[] keys = {0,0,0,0};  //index order 0=w, 1=a, 2=s, 3=d
 float speed = 2;           //speed the dot moves
 player user;
+float slide = 0.05;
 
 void setup(){
   size(800,800);
@@ -23,11 +24,98 @@ void draw(){
   fill(0);
   ellipse(user.getX(),user.getY(),10,10);              //draws the dot
   
-  if(keys[0] != 0){user.addY(-keys[0]);}  //if the w key is pressed
-  if(keys[1] != 0){user.addX(-keys[1]);}  //if the a key is pressed
-  if(keys[2] != 0){user.addY(keys[2]);}  //if the s key is pressed
-  if(keys[3] != 0){user.addX(keys[3]);}  //if the d key is pressed
+  inputUpdate();
+  println(keys);
+   
 }
+
+//void inputUpdate(){
+//  if(keys[0] != 0){                      //if the w key is pressed
+//    user.addY(-keys[0]);
+//    if(keys[0] > 0){
+//      keys[0] -= slide;
+//    }else if(keys[0] < 0){
+//      keys[0] = 0;
+//    }
+//  }
+  
+//  if(keys[1] != 0){                      //if the a key is pressed
+//    user.addX(-keys[1]);
+//    if(keys[1] > 0){
+//      keys[1] -= slide;
+//    }else if(keys[1] < 0){
+//      keys[1] = 0;
+//    }
+//  }  
+//  if(keys[2] != 0){                      //if the s key is pressed
+//    user.addY(keys[2]);
+//    if(keys[2] > 0){
+//      keys[2] -= slide;
+//    }else if(keys[2] < 0){
+//      keys[2] = 0;
+//    }
+//  }
+  
+//  if(keys[3] != 0){                      //if the d key is pressed 
+//    user.addX(keys[3]);
+//    if(keys[3] > 0){
+//      keys[3] -= slide;
+//    }else if(keys[3] < 0){
+//      keys[3] = 0;
+//    }
+//  }  
+//}
+
+
+void inputUpdate(){
+  if(keys[0] != 0){                      //if the w key is pressed
+    user.addY(-keys[0]);
+    if(keys[0] > 0){
+      keys[0] -= slide;
+    }
+    if(keys[0] < 0){
+      keys[0] = 0;
+    }
+  }
+  
+  if(keys[1] != 0){                      //if the a key is pressed
+    user.addX(-keys[1]);
+    if(keys[1] > 0){
+      keys[1] -= slide;
+    }
+    if(keys[1] < 0){
+      keys[1] = 0;
+    }
+  }  
+  if(keys[2] != 0){                      //if the s key is pressed
+    user.addY(keys[2]);
+    if(keys[2] > 0){
+      keys[2] -= slide;
+    }
+    if(keys[2] < 0){
+      keys[2] = 0;
+    }
+  }
+  
+  if(keys[3] != 0){                      //if the d key is pressed 
+    user.addX(keys[3]);
+    if(keys[3] > 0){
+      keys[3] -= slide;
+    }
+    if(keys[3] < 0){
+      keys[3] = 0;
+    }
+  }  
+}
+
+
+//void inputUpdate(){
+//  if(keys[0] != 0){user.addY(-keys[0]);}  //if the w key is pressed
+//  if(keys[1] != 0){user.addX(-keys[1]);}  //if the a key is pressed
+//  if(keys[2] != 0){user.addY(keys[2]);}  //if the s key is pressed
+//  if(keys[3] != 0){user.addX(keys[3]);}  //if the d key is pressed
+//}
+
 
 //updates the array based on the key press
 void keyPressed(){
@@ -37,10 +125,10 @@ void keyPressed(){
    if(key == 'd'){keys[3] = speed;}
 }
 
-//updates the array based on the key release
-void keyReleased(){
-   if(key == 'w'){keys[0] = 0;}
-   if(key == 'a'){keys[1] = 0;}
-   if(key == 's'){keys[2] = 0;}
-   if(key == 'd'){keys[3] = 0;}
-}
+////updates the array based on the key release
+//void keyReleased(){
+//   if(key == 'w'){keys[0] = 0;}
+//   if(key == 'a'){keys[1] = 0;}
+//   if(key == 's'){keys[2] = 0;}
+//   if(key == 'd'){keys[3] = 0;}
+//}
