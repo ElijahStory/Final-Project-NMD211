@@ -13,27 +13,46 @@ float speedMax;           //speed the dot moves
 x_yControler player;
 float slideX;
 float slideY;
-boolean cursorActive = true;
+boolean cursorActive = false;
+PImage penguin;
+float dir = 360;
+float x = 0;
+float y = 0;
 
 void setup(){
   size(1080,608);
-  size(1920,1080);
+  //size(1920,1080);
   
   slideX = fixX(0.02);
   slideY = fixY(0.02);
   speedMax = 2;
+  
+  penguin = loadImage("penguin-V2.png");
   
   player = new x_yControler(width/2,height/2);
   
 }
 
 void draw(){
-  background(255);
-  fill(0);
-  ellipse(player.getX(),player.getY(),fixX(10),fixY(10));              //draws the dot
+  background(184, 227, 227);
+  imageMode(CENTER);
+  
+  //println(dir);
+  
+  push();
+  penguin.resize(0,(int)fixY(30));
+  translate(player.getX(), player.getY());
+  findDirection();
+  rotate(-dir);
+  image(penguin, 0, 0);
+  pop();
   
   inputUpdate();
   //println(keys[0][1],keys[1][1],keys[2][1],keys[3][1]);
+}
+
+void findDirection(){  
+  dir = atan2((player.getX()-x)-player.getX(),(player.getY()-y)-player.getY());
 }
 
 float fixX(float x){
@@ -79,6 +98,10 @@ void inputUpdate(){
   player.addX(-keys[1][1]);
   player.addY(keys[2][1]);
   player.addX(keys[3][1]);
+  
+  x = -keys[1][1] + keys[3][1];
+  y = -keys[0][1] + keys[2][1];
+  
 }
 
 void keyPressed(){
