@@ -1,13 +1,13 @@
-class player{
+class x_yControler{
   private float x;
   private float y;
   
-  player(){
+  x_yControler(){
     x = 0;
     y = 0;
   }
   
-  player(float _x, float _y){
+  x_yControler(float _x, float _y){
     x = _x;
     y = _y;
   }
@@ -30,9 +30,11 @@ class player{
   
   void addX(float value){
     x += value;
+    x = constrain(x, 0, width);
   }
   
   void addY(float value){
     y += value;
+    y = constrain(y, 0, height);
   }
 }
