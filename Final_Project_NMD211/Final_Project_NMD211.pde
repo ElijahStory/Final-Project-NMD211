@@ -15,7 +15,7 @@ float slideX;
 float slideY;
 boolean cursorActive = false;
 PImage penguin;
-float dir = 360;
+float dir;
 float x = 0;
 float y = 0;
 
@@ -42,17 +42,12 @@ void draw(){
   push();
   penguin.resize(0,(int)fixY(30));
   translate(player.getX(), player.getY());
-  findDirection();
+  dir = atan2((player.getX()-x)-player.getX(),(player.getY()-y)-player.getY());
   rotate(-dir);
   image(penguin, 0, 0);
   pop();
   
   inputUpdate();
-  //println(keys[0][1],keys[1][1],keys[2][1],keys[3][1]);
-}
-
-void findDirection(){  
-  dir = atan2((player.getX()-x)-player.getX(),(player.getY()-y)-player.getY());
 }
 
 float fixX(float x){
