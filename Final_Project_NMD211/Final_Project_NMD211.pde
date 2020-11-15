@@ -9,38 +9,64 @@
 
 
 float[][] keys = {{0,0},{0,0},{0,0},{0,0}};  //index order 0=w, 1=a, 2=s, 3=d
-float speedMax = 2;           //speed the dot moves
+float speedMax;           //speed the dot moves
 x_yControler player;
-float slide = 0.02;
+float slideX;
+float slideY;
 boolean cursorActive = true;
 
 void setup(){
-  size(800,800);
+  size(1080,608);
+  size(1920,1080);
+  
+  slideX = fixX(0.02);
+  slideY = fixY(0.02);
+  speedMax = 2;
   
   player = new x_yControler(width/2,height/2);
+  
 }
 
 void draw(){
   background(255);
   fill(0);
-  ellipse(player.getX(),player.getY(),10,10);              //draws the dot
+  ellipse(player.getX(),player.getY(),fixX(10),fixY(10));              //draws the dot
   
   inputUpdate();
   //println(keys[0][1],keys[1][1],keys[2][1],keys[3][1]);
-  
+}
+
+float fixX(float x){
+  return map(x, 0, 1920, 0, width); 
+}
+
+float fixY(float y){
+  return map(y, 0, 1080, 0, height); 
 }
 
 void inputUpdate(){
   for(int i = 0; i < keys.length; i++){
     if(keys[i][0] == 1 && keys[i][1] < speedMax){
       if(!cursorActive){
-        keys[i][1] += slide;
+        if(i % 2 == 0){
+          keys[i][1] += slideY;
+        }else{
+          keys[i][1] += slideX;
+        }
       }else{
-        keys[i][1] = speedMax*3;
+        if(i % 2 == 0){
+          keys[i][1] = fixY(speedMax*3);
+        }else{
+          keys[i][1] = fixX(speedMax*3);
+        }
       }
     }else if(keys[i][1] > 0){
       if(!cursorActive){
-        keys[i][1] -= slide;
+        if(i % 2 == 0){
+          keys[i][1] -= slideY;
+        }else{
+          keys[i][1] -= slideX;
+        }
       }else{
         keys[i][1] = 0;
       }
