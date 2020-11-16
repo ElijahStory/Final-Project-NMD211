@@ -15,19 +15,24 @@ float slideX;
 float slideY;
 boolean cursorActive = false;
 PImage penguin;
+PImage iceChunk;
+PImage hole;
 float dir;
 float x = 0;
 float y = 0;
 
 void setup(){
-  size(1080,608);
-  //size(1920,1080);
+  //size(1080,608);
+  size(1920,1080);
   
   slideX = fixX(0.02);
   slideY = fixY(0.02);
-  speedMax = 2;
+  speedMax = 3;
   
   penguin = loadImage("penguin-V2.png");
+  iceChunk = loadImage("ice-chunk.png");
+  hole = loadImage("hole.png");
+  
   
   player = new x_yControler(width/2,height/2);
   
@@ -37,7 +42,8 @@ void draw(){
   background(184, 227, 227);
   imageMode(CENTER);
   
-  //println(dir);
+  iceChunk.resize((int)fixX(1200),0);
+  image(iceChunk, width/2, height/2);
   
   push();
   penguin.resize(0,(int)fixY(30));
@@ -48,6 +54,13 @@ void draw(){
   pop();
   
   inputUpdate();
+  
+  if(player.getX() < fixX(370) || player.getX() > fixX(1555) ||
+     player.getY() < fixY(120) || player.getY() > fixY(1072)){
+       player.setX(width/2);
+       player.setY(height/2);
+     }
+
 }
 
 float fixX(float x){
