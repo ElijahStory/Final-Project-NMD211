@@ -20,10 +20,14 @@ PImage hole;
 float dir;
 float x = 0;
 float y = 0;
+boolean playerDead = false;
+float playerAlpha = 255;
+linkedList<x_yControler> obstacleList = new linkedList();
 
 void setup(){
-  //size(1080,608);
-  size(1920,1080);
+  size(1080,608);
+  //size(1920,1080);
+  //fullScreen();
   
   slideX = fixX(0.02);
   slideY = fixY(0.02);
@@ -33,8 +37,9 @@ void setup(){
   iceChunk = loadImage("ice-chunk.png");
   hole = loadImage("hole.png");
   
+  obstacleList.add(new x_yControler(fixX(1200),height/2,"hole"));
   
-  player = new x_yControler(width/2,height/2);
+  player = new x_yControler(width/2,height/2,"player");
   
 }
 
@@ -50,17 +55,24 @@ void draw(){
   translate(player.getX(), player.getY());
   dir = atan2((player.getX()-x)-player.getX(),(player.getY()-y)-player.getY());
   rotate(-dir);
+  tint(255,playerAlpha);
   image(penguin, 0, 0);
   pop();
   
   inputUpdate();
   
   if(player.getX() < fixX(370) || player.getX() > fixX(1555) ||
-     player.getY() < fixY(120) || player.getY() > fixY(1072)){
-       player.setX(width/2);
-       player.setY(height/2);
+     player.getY() < fixY(120) || player.getY() > fixY(970)){
+       playerDead = true;
+       deathSceen();
      }
 
+  node current = obstacleList.getHead();
+  for(int i = 0; i < obstacleList.getSize(); i++){
+    if(){
+       
+    }
+  }
 }
 
 float fixX(float x){
@@ -102,14 +114,30 @@ void inputUpdate(){
     }
   }
   
-  player.addY(-keys[0][1]);
-  player.addX(-keys[1][1]);
-  player.addY(keys[2][1]);
-  player.addX(keys[3][1]);
-  
-  x = -keys[1][1] + keys[3][1];
-  y = -keys[0][1] + keys[2][1];
-  
+  if(!playerDead){
+    player.addY(-keys[0][1]);
+    player.addX(-keys[1][1]);
+    player.addY(keys[2][1]);
+    player.addX(keys[3][1]);
+    
+    x = -keys[1][1] + keys[3][1];
+    y = -keys[0][1] + keys[2][1];
+  }  
+}
+
+void deathSceen(){
+  if(playerDead && playerAlpha > 0){
+    playerAlpha -= 2;
+  }else{
+    player.setX(width/2);
+    player.setY(height/2);
+    playerDead = false;
+    playerAlpha = 255;
+    keys[0][1] = 0;
+    keys[1][1] = 0;
+    keys[2][1] = 0;
+    keys[3][1] = 0;
+  }
 }
 
 void keyPressed(){
