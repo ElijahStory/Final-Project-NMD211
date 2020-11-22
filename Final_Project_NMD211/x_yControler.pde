@@ -1,18 +1,18 @@
 class x_yControler{
   private float x;
   private float y;
-  private String name;
+  private String id;
   
   x_yControler(){
     x = 0;
     y = 0;
-    name = "empty";
+    id = "empty";
   }
   
-  x_yControler(float _x, float _y, String _name){
+  x_yControler(float _x, float _y, String _id){
     x = _x;
     y = _y;
-    name = _name;
+    id = _id;
   }
   
   float getX(){
@@ -31,12 +31,12 @@ class x_yControler{
     y = _y;
   }
   
-  public String getName(){
-    return name; 
+  public String getId(){
+    return id; 
   }
   
-  void setName(String _name){
-    name = _name; 
+  void setId(String _id){
+    id = _id; 
   }
   
   void addX(float value){
@@ -50,6 +50,6 @@ class x_yControler{
   }
   
   String toString(){
-    return x+" "+y+" "+name; 
+    return x+" "+y+" "+id; 
   }
 }

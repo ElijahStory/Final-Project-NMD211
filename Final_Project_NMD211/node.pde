@@ -1,6 +1,6 @@
 class node<T>{
   private T element;
-  private node nextNode;
+  private node<T> nextNode;
   
   node(){
     element = null;
@@ -20,7 +20,7 @@ class node<T>{
     return element;
   }
   
-  public void setNext(node next){
+  public void setNext(node<T> next){
     nextNode = next; 
   }
   

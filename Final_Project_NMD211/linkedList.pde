@@ -1,5 +1,5 @@
 class linkedList<T>{
-  private node head;
+  private node<T> head;
   private int size;
   
   linkedList(){
@@ -8,7 +8,7 @@ class linkedList<T>{
   }
   
   public void add(T element){
-    node temp = new node(element);
+    node<T> temp = new node<T>(element);
     temp.setNext(head);
     head = temp;
     size++;

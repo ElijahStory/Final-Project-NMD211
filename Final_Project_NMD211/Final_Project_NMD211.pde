@@ -38,6 +38,7 @@ void setup(){
   hole = loadImage("hole.png");
   
   obstacleList.add(new x_yControler(fixX(1200),height/2,"hole"));
+  obstacleList.add(new x_yControler(fixX(500),height/2,"hole"));
   
   player = new x_yControler(width/2,height/2,"player");
   
@@ -46,6 +47,7 @@ void setup(){
 void draw(){
   background(184, 227, 227);
   imageMode(CENTER);
+  //rectMode(CENTER);
   
   iceChunk.resize((int)fixX(1200),0);
   image(iceChunk, width/2, height/2);
@@ -67,12 +69,14 @@ void draw(){
        deathSceen();
      }
 
-  node current = obstacleList.getHead();
-  for(int i = 0; i < obstacleList.getSize(); i++){
-    if(){
-       
-    }
-  }
+  //node<x_yControler> current = obstacleList.getHead();
+  //while(current != null){
+  //  x_yControler element = current.getElement();
+  //  if(current.getElement().getId().equals("hole")){
+  //     image(hole,element.getX(),element.getY());
+  //  }
+  //  current = current.getNext();
+  //}
 }
 
 float fixX(float x){
