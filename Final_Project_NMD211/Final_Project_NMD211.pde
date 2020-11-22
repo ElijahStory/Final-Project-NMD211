@@ -1,9 +1,6 @@
 //Elijah Story
 //11-14-2020
-//key press example
-
-//This is an example of how you could get multiple key inputs at the same time. 
-//I am hoping to use the same array to accept multiple inputs.
+//Final project for NMD211
 
 //Inspiration from: https://forum.processing.org/two/discussion/22644/two-keys-pressed-three-keys-pressed-simultaneously
 
@@ -22,11 +19,10 @@ float x = 0;
 float y = 0;
 boolean playerDead = false;
 float playerAlpha = 255;
-linkedList<x_yControler> obstacleList = new linkedList();
 
 void setup(){
-  size(1080,608);
-  //size(1920,1080);
+  //size(1080,608);
+  size(1920,1080);
   //fullScreen();
   
   slideX = fixX(0.02);
@@ -34,11 +30,12 @@ void setup(){
   speedMax = 3;
   
   penguin = loadImage("penguin-V2.png");
+  penguin.resize(0,(int)fixY(30));
   iceChunk = loadImage("ice-chunk.png");
+  iceChunk.resize((int)fixX(1200),0);
   hole = loadImage("hole.png");
-  
-  obstacleList.add(new x_yControler(fixX(1200),height/2,"hole"));
-  obstacleList.add(new x_yControler(fixX(500),height/2,"hole"));
+  hole.resize((int)fixX(860),0);
+
   
   player = new x_yControler(width/2,height/2,"player");
   
@@ -47,13 +44,11 @@ void setup(){
 void draw(){
   background(184, 227, 227);
   imageMode(CENTER);
-  //rectMode(CENTER);
+  rectMode(CENTER);
   
-  iceChunk.resize((int)fixX(1200),0);
   image(iceChunk, width/2, height/2);
   
   push();
-  penguin.resize(0,(int)fixY(30));
   translate(player.getX(), player.getY());
   dir = atan2((player.getX()-x)-player.getX(),(player.getY()-y)-player.getY());
   rotate(-dir);
@@ -68,15 +63,6 @@ void draw(){
        playerDead = true;
        deathSceen();
      }
-
-  //node<x_yControler> current = obstacleList.getHead();
-  //while(current != null){
-  //  x_yControler element = current.getElement();
-  //  if(current.getElement().getId().equals("hole")){
-  //     image(hole,element.getX(),element.getY());
-  //  }
-  //  current = current.getNext();
-  //}
 }
 
 float fixX(float x){
