@@ -4,6 +4,7 @@ class level{
   private String completeTime;
   private int holeAmount;
   private float[][] holes;
+  private Button button;
   
   level(){
     levelName = "empty";
@@ -11,6 +12,7 @@ class level{
     completeTime = "00:00";
     holeAmount = 0;
     holes = new float[holeAmount][2];
+    button = new Button();
   }
   
   level(String N, boolean UL, String CT, int AH, float[][] H){
@@ -19,6 +21,7 @@ class level{
     completeTime = CT;
     holeAmount = AH;
     holes = H;
+    button = new Button();
   }
   
   String getLName(){
@@ -55,5 +58,9 @@ class level{
   
   void setHoles(float[][] newHoles){
     holes = newHoles; 
+  }
+  
+  void display(){
+    button.display(); 
   }
 }

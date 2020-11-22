@@ -20,12 +20,18 @@ float y = 0;
 boolean playerDead = false;
 float playerAlpha = 255;
 String[] levelFile;
-linkedList<level> levels = new linkedList<level>();
+SlideMenu levelMenu = new SlideMenu();
+//linkedList<level> levels = new linkedList<level>();
+Button testButton;
 
 void setup(){
-  //size(1080,608);
-  size(1920,1080);
+  size(1080,608);
+  //size(1920,1080);
   //fullScreen();
+  
+  imageMode(CENTER);
+  textAlign(CENTER);
+  
   
   levelFile = loadStrings("levels.txt");
   int index = 1;
@@ -44,9 +50,8 @@ void setup(){
        tempH[x][0] = fixX(Integer.parseInt(levelFile[index++]));
        tempH[x][1] = fixX(Integer.parseInt(levelFile[index++]));
     }
-    levels.add(new level(LN,UL,CT,AH,tempH));
+    levelMenu.addItem(new level(LN,UL,CT,AH,tempH));
   }
-  //node<level> temp = levels.getHead();
   
   
   
@@ -68,8 +73,6 @@ void setup(){
 
 void draw(){
   background(184, 227, 227);
-  imageMode(CENTER);
-  rectMode(CENTER);
   
   image(iceChunk, width/2, height/2);
   
@@ -88,6 +91,8 @@ void draw(){
        playerDead = true;
        deathSceen();
      }
+     
+     levelMenu.display();
 }
 
 float fixX(float x){
