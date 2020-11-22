@@ -19,11 +19,36 @@ float x = 0;
 float y = 0;
 boolean playerDead = false;
 float playerAlpha = 255;
+String[] levelFile;
+linkedList<level> levels = new linkedList<level>();
 
 void setup(){
   //size(1080,608);
   size(1920,1080);
   //fullScreen();
+  
+  levelFile = loadStrings("levels.txt");
+  int index = 1;
+  for(int i = 0; i < Integer.parseInt(levelFile[0]); i++){
+    String LN = levelFile[index++];
+    boolean UL;
+    if(levelFile[index++].equals("t")){
+      UL = true;
+    }else{
+      UL = false;
+    }
+    String CT = levelFile[index++];
+    int AH = Integer.parseInt(levelFile[index++]);
+    float[][] tempH = new float[AH][2];
+    for(int x = 0; x < tempH.length; x+=2){
+       tempH[x][0] = fixX(Integer.parseInt(levelFile[index++]));
+       tempH[x][1] = fixX(Integer.parseInt(levelFile[index++]));
+    }
+    levels.add(new level(LN,UL,CT,AH,tempH));
+  }
+  //node<level> temp = levels.getHead();
+  
+  
   
   slideX = fixX(0.02);
   slideY = fixY(0.02);
@@ -143,3 +168,7 @@ void keyReleased(){
    if(key == 's'){keys[2][0] = 0;}
    if(key == 'd'){keys[3][0] = 0;}
 }
+
+//void mouseClicked(){
+//  println(mouseX, mouseY);
+//}
