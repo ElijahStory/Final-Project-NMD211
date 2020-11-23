@@ -4,7 +4,6 @@ class level{
   private String completeTime;
   private int holeAmount;
   private float[][] holes;
-  private Button button;
   private float startX;
   private float startY;
   private float endX;
@@ -17,20 +16,18 @@ class level{
     completeTime = "00:00";
     holeAmount = 0;
     holes = new float[holeAmount][2];
-    button = new Button();
     startX = 0;
     startY = 0;
     endX = 100;
     endY = 100;
   }
   
-  level(String N, boolean UL, String CT, int AH, float[][] H, Button b, float SX, float SY, float EX, float EY){
+  level(String N, boolean UL, String CT, int AH, float[][] H, float SX, float SY, float EX, float EY){
     levelName = N;
     unlocked = UL;
     completeTime = CT;
     holeAmount = AH;
     holes = H;
-    button = b;
     startX = SX;
     startY = SY;
     endX = EX;
@@ -103,13 +100,5 @@ class level{
   
   void setEndY(float y){
     endY = y; 
-  }
-  
-  Button getButton(){
-    return button; 
-  }
-  
-  void display(){
-    button.display(); 
   }
 }

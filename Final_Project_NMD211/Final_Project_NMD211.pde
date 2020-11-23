@@ -5,7 +5,7 @@
 //Inspiration for key input from: https://forum.processing.org/two/discussion/22644/two-keys-pressed-three-keys-pressed-simultaneously
 
 
-float[][] keys = {{0,0},{0,0},{0,0},{0,0}};  //index order 0=w, 1=a, 2=s, 3=d
+float[][] keys = {{0, 0}, {0, 0}, {0, 0}, {0, 0}};  //index order 0=w, 1=a, 2=s, 3=d
 float speedMax;           //speed the dot moves
 x_yControler player;
 float slideX;
@@ -26,32 +26,35 @@ MainMenu mainMenu;
 float[][] holes;
 boolean levelLoaded = false;
 SlideMenu playAgainMenu;
+level lastLevel;
 
 
-void setup(){
-  //size(1080,608);
-  size(1920,1080);
+void setup() {
+  //size(1080, 608);
+  size(1920, 1080);
   //fullScreen();
-  
+
   imageMode(CENTER);
-  textAlign(CENTER,CENTER);
-  
-  levelMenu = new SlideMenu(fixX(329), fixY(83), fixX(1270), fixY(900),false, fixY(18));
-  playAgainMenu = new SlideMenu(fixX(753), fixY(387), fixX(300), fixY(200), false, fixY(18));
-  
+  textAlign(CENTER, CENTER);
+
+  levelMenu = new SlideMenu(fixX(329), fixY(83), fixX(1270), fixY(900), false, fixY(18));
+  playAgainMenu = new SlideMenu(fixX(753), fixY(387), fixX(400), fixY(300), false, fixY(22));
+  playAgainMenu.addItem(new Button(fixX(781), playAgainMenu.getY()+fixY(40), fixX(340), fixY(100), true, "Retry Level", fixX(30), null));
+  playAgainMenu.addItem(new Button(fixX(781), playAgainMenu.getY()+fixY(160), fixX(340), fixY(100), true, "Level Menu", fixX(30), null));
+
   String msg = "This is a template for a message\nI will have at the start of the game\nexplaining how to play.ssssssssssssssssssssssssssssssssssss\nsdfffffffffffffffffffffffffffffffffffffffffffffff\nhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh\nwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww";
-  Button tempB = new Button(fixX(820),fixY(850),fixX(300),fixY(100),true,"Begin Game!",fixX(30));
-  mainMenu = new MainMenu(fixX(329), fixY(83), fixX(1270), fixY(900),true, fixY(18), msg, tempB, fixX(30));
-  
-  
+  Button tempB = new Button(fixX(820), fixY(850), fixX(300), fixY(100), true, "Begin Game!", fixX(30), null);
+  mainMenu = new MainMenu(fixX(329), fixY(83), fixX(1270), fixY(900), true, fixY(18), msg, tempB, fixX(30));
+
+
   levelFile = loadStrings("levels.txt");
   int index = 1;
-  for(int i = 0; i < Integer.parseInt(levelFile[0]); i++){
+  for (int i = 0; i < Integer.parseInt(levelFile[0]); i++) {
     String LN = levelFile[index++];
     boolean UL;
-    if(levelFile[index++].equals("t")){
+    if (levelFile[index++].equals("t")) {
       UL = true;
-    }else{
+    } else {
       UL = false;
     }
     String CT = levelFile[index++];
@@ -61,136 +64,137 @@ void setup(){
     float EY = fixY(Integer.parseInt(levelFile[index++]));
     int AH = Integer.parseInt(levelFile[index++]);
     float[][] tempH = new float[AH][2];
-    for(int x = 0; x < tempH.length; x++){
-       tempH[x][0] = fixX(Integer.parseInt(levelFile[index++]));
-       tempH[x][1] = fixY(Integer.parseInt(levelFile[index++]));
+    for (int x = 0; x < tempH.length; x++) {
+      tempH[x][0] = fixX(Integer.parseInt(levelFile[index++]));
+      tempH[x][1] = fixY(Integer.parseInt(levelFile[index++]));
     }
     float tempX;
     float tempY;
-    if(i <= 2){
+    if (i <= 2) {
       tempX = fixX(440 + 380*i);
       tempY = levelMenu.getY()+fixY(120);
-    }else{
+    } else {
       tempX = fixX(440 + 380*(i%3));
       tempY = levelMenu.getY()+fixY(520);
     }
-    Button temp = new Button(tempX,tempY,fixX(285),fixY(300),UL,LN+"\n"+CT,fixX(50));
-    levelMenu.addItem(new level(LN,UL,CT,AH,tempH,temp,SX,SY,EX,EY));
+    level temp = new level(LN, UL, CT, AH, tempH, SX, SY, EX, EY);
+    levelMenu.addItem(new Button(tempX, tempY, fixX(285), fixY(300), UL, LN+"\n"+CT, fixX(50), temp));
   }
-  
-  
-  
+
+
+
   slideX = fixX(0.02);
   slideY = fixY(0.02);
   speedMax = 3;
-  
+
   penguin = loadImage("penguin-V2.png");
-  penguin.resize(0,(int)fixY(30));
+  penguin.resize(0, (int)fixY(30));
   iceChunk = loadImage("ice-chunk.png");
-  iceChunk.resize((int)fixX(1200),0);
+  iceChunk.resize((int)fixX(1200), 0);
   hole = loadImage("hole.png");
-  hole.resize((int)fixX(860),0);
+  hole.resize((int)fixX(860), 0);
 
-  
-  player = new x_yControler(width/2,height/2,"player");
-  
+
+  player = new x_yControler(width/2, height/2, "player");
 }
 
-void draw(){
+void draw() {
   background(184, 227, 227);
-  
+
   image(iceChunk, width/2, height/2);
-  
-  push();
-  translate(player.getX(), player.getY());
-  dir = atan2((player.getX()-x)-player.getX(),(player.getY()-y)-player.getY());
-  rotate(-dir);
-  tint(255,playerAlpha);
-  image(penguin, 0, 0);
-  pop();
-  
-  inputUpdate();
-  
-  if(player.getX() < fixX(370) || player.getX() > fixX(1555) ||
-     player.getY() < fixY(120) || player.getY() > fixY(970)){
-       playerDead = true;
-       deathSceen();
-     }
-   
-   if(levelLoaded){
-     drawLevel();
-     if(levelMenu.getY() <= levelMenu.getHeight() && !gameInPlay){
-       gameInPlay = true; 
-     }
-   }
-   
-   levelMenu.display();
-   mainMenu.display();
-   playAgainMenu.display();
-  
-}
-
-float fixX(float x){
-  return map(x, 0, 1920, 0, width); 
-}
-
-float fixY(float y){
-  return map(y, 0, 1080, 0, height); 
-}
-
-void inputUpdate(){
-  for(int i = 0; i < keys.length; i++){
-    if(keys[i][0] == 1 && keys[i][1] < speedMax){
-      if(!cursorActive){
-        if(i % 2 == 0){
-          keys[i][1] += slideY;
-        }else{
-          keys[i][1] += slideX;
-        }
-      }else{
-        if(i % 2 == 0){
-          keys[i][1] = fixY(speedMax*3);
-        }else{
-          keys[i][1] = fixX(speedMax*3);
-        }
-      }
-    }else if(keys[i][1] > 0){
-      if(!cursorActive){
-        if(i % 2 == 0){
-          keys[i][1] -= slideY;
-        }else{
-          keys[i][1] -= slideX;
-        }
-      }else{
-        keys[i][1] = 0;
-      }
-    }else if(keys[i][1] < 0){
-      keys[i][1] = 0;
+  if (levelLoaded) {
+    drawLevel();
+    if (levelMenu.isAway() && !gameInPlay && playAgainMenu.isAway()) {
+      gameInPlay = true;
     }
   }
   
-  if(!playerDead){
+  float playerX = player.getX();
+  float playerY = player.getY();
+  
+  push();
+  translate(playerX, playerY);
+  dir = atan2((playerX-x)-playerX, (playerY-y)-playerY);
+  rotate(-dir);
+  tint(255, playerAlpha);
+  image(penguin, 0, 0);
+  pop();
+
+  inputUpdate();
+
+  if (playerX < fixX(370) || playerX > fixX(1555) ||
+    playerY < fixY(120) || playerY > fixY(970)) {
+    playerDead = true;
+    deathSceen();
+  }
+
+  levelMenu.display();
+  mainMenu.display();
+  playAgainMenu.display();
+}
+
+float fixX(float x) {
+  return map(x, 0, 1920, 0, width);
+}
+
+float fixY(float y) {
+  return map(y, 0, 1080, 0, height);
+}
+
+void inputUpdate() {
+  for (int i = 0; i < keys.length; i++) {
+    if (keys[i][0] == 1 && keys[i][1] < speedMax) {
+      if (!cursorActive) {
+        if (i % 2 == 0) {
+          keys[i][1] += slideY;
+        } else {
+          keys[i][1] += slideX;
+        }
+      } else {
+        if (i % 2 == 0) {
+          keys[i][1] = fixY(speedMax*3);
+        } else {
+          keys[i][1] = fixX(speedMax*3);
+        }
+      }
+    } else if (keys[i][1] > 0) {
+      if (!cursorActive) {
+        if (i % 2 == 0) {
+          keys[i][1] -= slideY;
+        } else {
+          keys[i][1] -= slideX;
+        }
+      } else {
+        keys[i][1] = 0;
+      }
+    } else if (keys[i][1] < 0) {
+      keys[i][1] = 0;
+    }
+  }
+
+  if (!playerDead) {
     player.addY(-keys[0][1]);
     player.addX(-keys[1][1]);
     player.addY(keys[2][1]);
     player.addX(keys[3][1]);
-    
+
     x = -keys[1][1] + keys[3][1];
     y = -keys[0][1] + keys[2][1];
-  }  
-}
-
-void deathSceen(){
-  if(playerDead && playerAlpha > 0){
-    gameInPlay = false;
-    playerAlpha -= 2;
-  }else if(!playAgainMenu.getDown()){
-    playAgainMenu.setDown(!playAgainMenu.getDown());
   }
 }
 
-void loadLevel(level loadedLevel){
-  println(loadedLevel.getLName());
+void deathSceen() {
+  if (playerDead && playerAlpha > 0) {
+    gameInPlay = false;
+    playerAlpha -= 2;
+  } else if (!playAgainMenu.getDown()) {
+    playAgainMenu.setDown(true);
+    player.setX(lastLevel.getStartX());
+    player.setY(lastLevel.getStartY());
+  }
+}
+
+void loadLevel(level loadedLevel) {
   player.setX(loadedLevel.getStartX());
   player.setY(loadedLevel.getStartY());
   holes = loadedLevel.getHoles();
@@ -200,46 +204,90 @@ void loadLevel(level loadedLevel){
   keys[1][1] = 0;
   keys[2][1] = 0;
   keys[3][1] = 0;
-  
+
+  lastLevel = loadedLevel;
   levelLoaded = true;
 }
 
-void drawLevel(){
-  for(int i = 0; i < holes.length; i++){
+void drawLevel() {
+  float x = player.getX();
+  float y = player.getY();
+  for (int i = 0; i < holes.length; i++) {
     image(hole, holes[i][0], holes[i][1]);
+    if (dist(x, y, holes[i][0], holes[i][1]) <= fixX(25)) {
+      playerDead = true;
+      deathSceen();
+    }
   }
 }
 
-void keyPressed(){
-  if(gameInPlay){
-   if(key == 'w'){keys[0][0] = 1;}  
-   if(key == 'a'){keys[1][0] = 1;}
-   if(key == 's'){keys[2][0] = 1;}
-   if(key == 'd'){keys[3][0] = 1;}
+//void checkLose() {
+//  float x = player.getX();
+//  float y = player.getY();
+//  for (int i = 0; i < holes.length; i++) {
+//    if (dist(x, y, holes[i][0], holes[i][1]) <= 20) {
+//      playerDead = true;
+//      deathSceen();
+//    }
+//  }
+//}
+
+void keyPressed() {
+  if (gameInPlay) {
+    if (key == 'w') {
+      keys[0][0] = 1;
+    }  
+    if (key == 'a') {
+      keys[1][0] = 1;
+    }
+    if (key == 's') {
+      keys[2][0] = 1;
+    }
+    if (key == 'd') {
+      keys[3][0] = 1;
+    }
   }
 }
 
-void keyReleased(){
-   if(key == 'w'){keys[0][0] = 0;}  
-   if(key == 'a'){keys[1][0] = 0;}
-   if(key == 's'){keys[2][0] = 0;}
-   if(key == 'd'){keys[3][0] = 0;}
+void keyReleased() {
+  if (key == 'w') {
+    keys[0][0] = 0;
+  }  
+  if (key == 'a') {
+    keys[1][0] = 0;
+  }
+  if (key == 's') {
+    keys[2][0] = 0;
+  }
+  if (key == 'd') {
+    keys[3][0] = 0;
+  }
 }
 
-void mousePressed(){
+void mousePressed() {
   println(mouseX, mouseY);
-  if(mainMenu.getButton().buttonClicked()){
-    levelMenu.setDown(!levelMenu.getDown());
-    mainMenu.setDown(!mainMenu.getDown());
+  if (mainMenu.getButton().buttonClicked()) {
+    levelMenu.setDown(true);
+    mainMenu.setDown(false);
   }
-  
-  if(levelMenu.getDown()){
-    level[] temp = levelMenu.getLevels();
-    for(int i = 0; i < temp.length; i++){
-      if(temp[i].getButton().buttonClicked()){
-        levelMenu.setDown(!levelMenu.getDown());
-        loadLevel(temp[i]);
+
+  if (levelMenu.getDown()) {
+    Button[] temp = levelMenu.getButton();
+    for (int i = 0; i < temp.length; i++) {
+      if (temp[i].buttonClicked()) {
+        levelMenu.setDown(false);
+        loadLevel(temp[i].getLevel());
       }
+    }
+  } else {
+    Button[] temp = playAgainMenu.getButton();
+    if (temp[0].buttonClicked()) {
+      loadLevel(lastLevel);
+      playAgainMenu.setDown(false);
+    }
+    if (temp[1].buttonClicked()) {
+      playAgainMenu.setDown(false);
+      levelMenu.setDown(true);
     }
   }
 }

@@ -4,7 +4,7 @@ class SlideMenu{
   private float mWidth;
   private float mHeight;
   private boolean down;
-  private level[] items = new level[0];
+  private Button[] items = new Button[0];
   private float speed = 18;
   private float startY;
   
@@ -21,7 +21,7 @@ class SlideMenu{
   
   SlideMenu(float _x, float _y, float w, float h, boolean d, float s){
     x = _x;
-    y = -w;
+    y = -h;
     mWidth = w;
     mHeight = h;
     down = d;
@@ -85,19 +85,23 @@ class SlideMenu{
     speed = s;
   }
   
-  level[] getLevels(){
+  Button[] getButton(){
     return items; 
   }
   
-  private void increaseArray(level[] old){
-     level[] newArray = new level[old.length+1];
+  boolean isAway(){
+    return y <= -mHeight;
+  }
+  
+  private void increaseArray(Button[] old){
+     Button[] newArray = new Button[old.length+1];
      for(int i = 0; i < old.length; i++){
        newArray[i] = old[i]; 
      }
      items = newArray;
   }
   
-  <T> void addItem(level item){
+  void addItem(Button item){
     increaseArray(items);
     items[items.length-1] = item;
   }
@@ -129,7 +133,7 @@ class SlideMenu{
   private void move(int dir){
     y += speed*dir;
     for(int i = 0; i < items.length; i++){
-      items[i].button.addY(speed*dir); 
+      items[i].addY(speed*dir); 
     }
   }
 }

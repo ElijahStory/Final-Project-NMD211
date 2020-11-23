@@ -7,6 +7,7 @@ class Button {
   private boolean unlocked;
   private String label;
   private float textS;
+  private level levelInfo;
 
   Button() {
     x = width/2;
@@ -17,9 +18,10 @@ class Button {
     unlocked = false;
     label = " ";
     textS = 30;
+    levelInfo = null;
   }
 
-  Button(float _x, float _y, float w, float h, boolean UL, String _label, float ts) {
+  Button(float _x, float _y, float w, float h, boolean UL, String _label, float ts, level li) {
     x = _x;
     y = _y;
     bWidth = w;
@@ -28,6 +30,7 @@ class Button {
     unlocked = UL;
     label = _label;
     textS = ts;
+    levelInfo = li;
   }
 
   float getX() {
@@ -84,6 +87,14 @@ class Button {
 
   void setLabel(String _label) {
     label = _label;
+  }
+  
+  level getLevel(){
+    return levelInfo; 
+  }
+  
+  void setLevel(level l){
+    levelInfo = l; 
   }
   
   void addY(float add){
