@@ -27,11 +27,12 @@ float[][] holes;
 boolean levelLoaded = false;
 SlideMenu playAgainMenu;
 level lastLevel;
+Timer timer;
 
 
 void setup() {
-  //size(1080, 608);
-  size(1920, 1080);
+  size(1080, 608);
+  //size(1920, 1080);
   //fullScreen();
 
   imageMode(CENTER);
@@ -46,6 +47,7 @@ void setup() {
   Button tempB = new Button(fixX(820), fixY(850), fixX(300), fixY(100), true, "Begin Game!", fixX(30), null);
   mainMenu = new MainMenu(fixX(329), fixY(83), fixX(1270), fixY(900), true, fixY(18), msg, tempB, fixX(30));
 
+  timer = new Timer(fixX(1750), fixY(96), fixX(50));
 
   levelFile = loadStrings("levels.txt");
   int index = 1;
@@ -104,8 +106,9 @@ void draw() {
   image(iceChunk, width/2, height/2);
   if (levelLoaded) {
     drawLevel();
-    if (levelMenu.isAway() && !gameInPlay && playAgainMenu.isAway()) {
+    if (levelMenu.isAway() && !gameInPlay && playAgainMenu.isAway() && !playerDead) {
       gameInPlay = true;
+      timer.startTime();
     }
   }
   
@@ -125,9 +128,11 @@ void draw() {
   if (playerX < fixX(370) || playerX > fixX(1555) ||
     playerY < fixY(120) || playerY > fixY(970)) {
     playerDead = true;
+    timer.stopTime();
     deathSceen();
   }
 
+  timer.display();
   levelMenu.display();
   mainMenu.display();
   playAgainMenu.display();
@@ -216,21 +221,11 @@ void drawLevel() {
     image(hole, holes[i][0], holes[i][1]);
     if (dist(x, y, holes[i][0], holes[i][1]) <= fixX(25)) {
       playerDead = true;
+      timer.stopTime();
       deathSceen();
     }
   }
 }
-
-//void checkLose() {
-//  float x = player.getX();
-//  float y = player.getY();
-//  for (int i = 0; i < holes.length; i++) {
-//    if (dist(x, y, holes[i][0], holes[i][1]) <= 20) {
-//      playerDead = true;
-//      deathSceen();
-//    }
-//  }
-//}
 
 void keyPressed() {
   if (gameInPlay) {
@@ -283,6 +278,7 @@ void mousePressed() {
     Button[] temp = playAgainMenu.getButton();
     if (temp[0].buttonClicked()) {
       loadLevel(lastLevel);
+      timer.setTime("00:00:00");
       playAgainMenu.setDown(false);
     }
     if (temp[1].buttonClicked()) {
