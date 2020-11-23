@@ -5,6 +5,8 @@ class SlideMenu{
   private float mHeight;
   private boolean down;
   private level[] items = new level[0];
+  private float speed = 18;
+  private float startY;
   
   
   SlideMenu(){
@@ -13,14 +15,18 @@ class SlideMenu{
     mWidth = 500;
     mHeight = 400;
     down = false;
+    startY = y;
+    speed = 18;
   }
   
-  SlideMenu(float _x, float _y, float w, float h, boolean d){
+  SlideMenu(float _x, float _y, float w, float h, boolean d, float s){
     x = _x;
-    y = _y;
+    y = -1000;
     mWidth = w;
     mHeight = h;
     down = d;
+    startY = _y;
+    speed = s;
   }
   
   float getX() {
@@ -63,6 +69,22 @@ class SlideMenu{
     down = d; 
   }
   
+  float getStartY() {
+    return startY;
+  }
+
+  void setStartY(float _y) {
+    startY = _y;
+  }
+  
+  float getSpeed() {
+    return speed;
+  }
+
+  void setSpeed(float s) {
+    speed = s;
+  }
+  
   private void increaseArray(level[] old){
      level[] newArray = new level[old.length+1];
      for(int i = 0; i < old.length; i++){
@@ -77,11 +99,33 @@ class SlideMenu{
   }
   
   void display(){
-    fill(240,142,44);
-    stroke(191,111,31);
-    rect(x, y, mWidth, mHeight, 10);
+    if(down){
+      if(y <= startY){
+        move(1); 
+      }
+      fill(240,142,44);
+      stroke(191,111,31);
+      rect(x, y, mWidth, mHeight, 10);
+      for(int i = 0; i < items.length; i++){
+        items[i].display(); 
+      }
+    }else{
+      if(y >= -1000){
+         move(-1);
+      }
+      fill(240,142,44);
+      stroke(191,111,31);
+      rect(x, y, mWidth, mHeight, 10);
+      for(int i = 0; i < items.length; i++){
+        items[i].display(); 
+      }
+    }
+  }
+  
+  private void move(int dir){
+    y += speed*dir;
     for(int i = 0; i < items.length; i++){
-      items[i].display(); 
+      items[i].button.addY(speed*dir); 
     }
   }
 }

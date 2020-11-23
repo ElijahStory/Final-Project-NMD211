@@ -6,6 +6,7 @@ class Button {
   private boolean mouseOver;
   private boolean unlocked;
   private String label;
+  private float textS;
 
   Button() {
     x = width/2;
@@ -15,9 +16,10 @@ class Button {
     mouseOver = false;
     unlocked = false;
     label = " ";
+    textS = 30;
   }
 
-  Button(float _x, float _y, float w, float h, boolean UL, String _label) {
+  Button(float _x, float _y, float w, float h, boolean UL, String _label, float ts) {
     x = _x;
     y = _y;
     bWidth = w;
@@ -25,6 +27,7 @@ class Button {
     mouseOver = false;
     unlocked = UL;
     label = _label;
+    textS = ts;
   }
 
   float getX() {
@@ -82,17 +85,21 @@ class Button {
   void setLabel(String _label) {
     label = _label;
   }
+  
+  void addY(float add){
+    y += add; 
+  }
 
   void display() {
     overButton();
     fill(232, 215, 84);
     stroke(206, 186, 31);
     strokeWeight(5);
-    textSize(30);
+    textSize(textS);
     rect(x, y, bWidth, bHeight, 10);
     fill(0);
     if (unlocked) {
-      text(label, x+(bWidth/2), y+(bHeight/2));
+      text(label, x+(bWidth/2), y+(bHeight/3));
     } else {
       text("Locked", x+(bWidth/2), y+(bHeight/2));
     }

@@ -2,7 +2,7 @@
 //11-14-2020
 //Final project for NMD211
 
-//Inspiration from: https://forum.processing.org/two/discussion/22644/two-keys-pressed-three-keys-pressed-simultaneously
+//Inspiration for key input from: https://forum.processing.org/two/discussion/22644/two-keys-pressed-three-keys-pressed-simultaneously
 
 
 float[][] keys = {{0,0},{0,0},{0,0},{0,0}};  //index order 0=w, 1=a, 2=s, 3=d
@@ -20,9 +20,10 @@ float y = 0;
 boolean playerDead = false;
 float playerAlpha = 255;
 String[] levelFile;
-SlideMenu levelMenu = new SlideMenu();
+SlideMenu levelMenu;
+boolean gameInPlay = false;
+
 //linkedList<level> levels = new linkedList<level>();
-Button testButton;
 
 void setup(){
   size(1080,608);
@@ -31,6 +32,8 @@ void setup(){
   
   imageMode(CENTER);
   textAlign(CENTER);
+  
+  levelMenu = new SlideMenu(fixX(329), fixY(83), fixX(1270), fixY(900),false, fixY(18));
   
   
   levelFile = loadStrings("levels.txt");
@@ -44,13 +47,27 @@ void setup(){
       UL = false;
     }
     String CT = levelFile[index++];
+    float SX = fixX(Integer.parseInt(levelFile[index++]));
+    float SY = fixY(Integer.parseInt(levelFile[index++]));
+    float EX = fixX(Integer.parseInt(levelFile[index++]));
+    float EY = fixY(Integer.parseInt(levelFile[index++]));
     int AH = Integer.parseInt(levelFile[index++]);
     float[][] tempH = new float[AH][2];
-    for(int x = 0; x < tempH.length; x+=2){
+    for(int x = 0; x < tempH.length; x++){
        tempH[x][0] = fixX(Integer.parseInt(levelFile[index++]));
        tempH[x][1] = fixX(Integer.parseInt(levelFile[index++]));
     }
-    levelMenu.addItem(new level(LN,UL,CT,AH,tempH));
+    float tempX;
+    float tempY;
+    if(i <= 2){
+      tempX = fixX(440 + 380*i);
+      tempY = fixY(173);
+    }else{
+      tempX = fixX(440 + 380*(i%3));
+      tempY = fixY(563);
+    }
+    Button temp = new Button(tempX,tempY-1070,fixX(285),fixY(300),UL,LN+"\n"+CT,fixX(50));
+    levelMenu.addItem(new level(LN,UL,CT,AH,tempH,temp,SX,SY,EX,EY));
   }
   
   
@@ -161,10 +178,12 @@ void deathSceen(){
 }
 
 void keyPressed(){
+  if(gameInPlay){
    if(key == 'w'){keys[0][0] = 1;}  
    if(key == 'a'){keys[1][0] = 1;}
    if(key == 's'){keys[2][0] = 1;}
    if(key == 'd'){keys[3][0] = 1;}
+  }
 }
 
 void keyReleased(){
@@ -174,6 +193,7 @@ void keyReleased(){
    if(key == 'd'){keys[3][0] = 0;}
 }
 
-//void mouseClicked(){
-//  println(mouseX, mouseY);
-//}
+void mouseClicked(){
+  println(mouseX, mouseY);
+  levelMenu.setDown(!levelMenu.getDown());
+}
