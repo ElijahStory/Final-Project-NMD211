@@ -21,7 +21,7 @@ class SlideMenu{
   
   SlideMenu(float _x, float _y, float w, float h, boolean d, float s){
     x = _x;
-    y = -1000;
+    y = -w;
     mWidth = w;
     mHeight = h;
     down = d;
@@ -85,6 +85,10 @@ class SlideMenu{
     speed = s;
   }
   
+  level[] getLevels(){
+    return items; 
+  }
+  
   private void increaseArray(level[] old){
      level[] newArray = new level[old.length+1];
      for(int i = 0; i < old.length; i++){
@@ -110,7 +114,7 @@ class SlideMenu{
         items[i].display(); 
       }
     }else{
-      if(y >= -1000){
+      if(y >= -mHeight){
          move(-1);
       }
       fill(240,142,44);

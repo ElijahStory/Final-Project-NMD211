@@ -23,6 +23,9 @@ String[] levelFile;
 SlideMenu levelMenu;
 boolean gameInPlay = false;
 MainMenu mainMenu;
+float[][] holes;
+boolean levelLoaded = false;
+SlideMenu playAgainMenu;
 
 
 void setup(){
@@ -34,6 +37,8 @@ void setup(){
   textAlign(CENTER,CENTER);
   
   levelMenu = new SlideMenu(fixX(329), fixY(83), fixX(1270), fixY(900),false, fixY(18));
+  playAgainMenu = new SlideMenu(fixX(753), fixY(387), fixX(300), fixY(200), false, fixY(18));
+  
   String msg = "This is a template for a message\nI will have at the start of the game\nexplaining how to play.ssssssssssssssssssssssssssssssssssss\nsdfffffffffffffffffffffffffffffffffffffffffffffff\nhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh\nwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww";
   Button tempB = new Button(fixX(820),fixY(850),fixX(300),fixY(100),true,"Begin Game!",fixX(30));
   mainMenu = new MainMenu(fixX(329), fixY(83), fixX(1270), fixY(900),true, fixY(18), msg, tempB, fixX(30));
@@ -58,18 +63,18 @@ void setup(){
     float[][] tempH = new float[AH][2];
     for(int x = 0; x < tempH.length; x++){
        tempH[x][0] = fixX(Integer.parseInt(levelFile[index++]));
-       tempH[x][1] = fixX(Integer.parseInt(levelFile[index++]));
+       tempH[x][1] = fixY(Integer.parseInt(levelFile[index++]));
     }
     float tempX;
     float tempY;
     if(i <= 2){
       tempX = fixX(440 + 380*i);
-      tempY = fixY(173);
+      tempY = levelMenu.getY()+fixY(120);
     }else{
       tempX = fixX(440 + 380*(i%3));
-      tempY = fixY(563);
+      tempY = levelMenu.getY()+fixY(520);
     }
-    Button temp = new Button(tempX,tempY-1070,fixX(285),fixY(300),UL,LN+"\n"+CT,fixX(50));
+    Button temp = new Button(tempX,tempY,fixX(285),fixY(300),UL,LN+"\n"+CT,fixX(50));
     levelMenu.addItem(new level(LN,UL,CT,AH,tempH,temp,SX,SY,EX,EY));
   }
   
@@ -111,9 +116,18 @@ void draw(){
        playerDead = true;
        deathSceen();
      }
-     
-     levelMenu.display();
-     mainMenu.display();
+   
+   if(levelLoaded){
+     drawLevel();
+     if(levelMenu.getY() <= levelMenu.getHeight() && !gameInPlay){
+       gameInPlay = true; 
+     }
+   }
+   
+   levelMenu.display();
+   mainMenu.display();
+   playAgainMenu.display();
+  
 }
 
 float fixX(float x){
@@ -168,16 +182,31 @@ void inputUpdate(){
 
 void deathSceen(){
   if(playerDead && playerAlpha > 0){
+    gameInPlay = false;
     playerAlpha -= 2;
-  }else{
-    player.setX(width/2);
-    player.setY(height/2);
-    playerDead = false;
-    playerAlpha = 255;
-    keys[0][1] = 0;
-    keys[1][1] = 0;
-    keys[2][1] = 0;
-    keys[3][1] = 0;
+  }else if(!playAgainMenu.getDown()){
+    playAgainMenu.setDown(!playAgainMenu.getDown());
+  }
+}
+
+void loadLevel(level loadedLevel){
+  println(loadedLevel.getLName());
+  player.setX(loadedLevel.getStartX());
+  player.setY(loadedLevel.getStartY());
+  holes = loadedLevel.getHoles();
+  playerDead = false;
+  playerAlpha = 255;
+  keys[0][1] = 0;
+  keys[1][1] = 0;
+  keys[2][1] = 0;
+  keys[3][1] = 0;
+  
+  levelLoaded = true;
+}
+
+void drawLevel(){
+  for(int i = 0; i < holes.length; i++){
+    image(hole, holes[i][0], holes[i][1]);
   }
 }
 
@@ -202,5 +231,15 @@ void mousePressed(){
   if(mainMenu.getButton().buttonClicked()){
     levelMenu.setDown(!levelMenu.getDown());
     mainMenu.setDown(!mainMenu.getDown());
+  }
+  
+  if(levelMenu.getDown()){
+    level[] temp = levelMenu.getLevels();
+    for(int i = 0; i < temp.length; i++){
+      if(temp[i].getButton().buttonClicked()){
+        levelMenu.setDown(!levelMenu.getDown());
+        loadLevel(temp[i]);
+      }
+    }
   }
 }
