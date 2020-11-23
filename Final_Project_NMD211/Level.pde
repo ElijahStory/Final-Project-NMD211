@@ -105,6 +105,10 @@ class level{
     endY = y; 
   }
   
+  Button getButton(){
+    return button; 
+  }
+  
   void display(){
     button.display(); 
   }

@@ -99,7 +99,7 @@ class Button {
     rect(x, y, bWidth, bHeight, 10);
     fill(0);
     if (unlocked) {
-      text(label, x+(bWidth/2), y+(bHeight/3));
+      text(label, x+(bWidth/2), y+(bHeight/2));
     } else {
       text("Locked", x+(bWidth/2), y+(bHeight/2));
     }

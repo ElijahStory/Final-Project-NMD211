@@ -22,18 +22,21 @@ float playerAlpha = 255;
 String[] levelFile;
 SlideMenu levelMenu;
 boolean gameInPlay = false;
+MainMenu mainMenu;
 
-//linkedList<level> levels = new linkedList<level>();
 
 void setup(){
-  size(1080,608);
-  //size(1920,1080);
+  //size(1080,608);
+  size(1920,1080);
   //fullScreen();
   
   imageMode(CENTER);
-  textAlign(CENTER);
+  textAlign(CENTER,CENTER);
   
   levelMenu = new SlideMenu(fixX(329), fixY(83), fixX(1270), fixY(900),false, fixY(18));
+  String msg = "This is a template for a message\nI will have at the start of the game\nexplaining how to play.ssssssssssssssssssssssssssssssssssss\nsdfffffffffffffffffffffffffffffffffffffffffffffff\nhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh\nwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww";
+  Button tempB = new Button(fixX(820),fixY(850),fixX(300),fixY(100),true,"Begin Game!",fixX(30));
+  mainMenu = new MainMenu(fixX(329), fixY(83), fixX(1270), fixY(900),true, fixY(18), msg, tempB, fixX(30));
   
   
   levelFile = loadStrings("levels.txt");
@@ -110,6 +113,7 @@ void draw(){
      }
      
      levelMenu.display();
+     mainMenu.display();
 }
 
 float fixX(float x){
@@ -193,7 +197,10 @@ void keyReleased(){
    if(key == 'd'){keys[3][0] = 0;}
 }
 
-void mouseClicked(){
+void mousePressed(){
   println(mouseX, mouseY);
-  levelMenu.setDown(!levelMenu.getDown());
+  if(mainMenu.getButton().buttonClicked()){
+    levelMenu.setDown(!levelMenu.getDown());
+    mainMenu.setDown(!mainMenu.getDown());
+  }
 }
