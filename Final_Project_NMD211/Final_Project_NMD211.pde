@@ -225,6 +225,12 @@ void loadLevel(level loadedLevel) {
 void drawLevel() {
   float x = player.getX();
   float y = player.getY();
+  
+  if(dist(x,y,fishCords[0],fishCords[1]) <= 10){
+     gameInPlay = false;
+     playerDead = false;
+  }
+  
   for (int i = 0; i < holes.length; i++) {
     image(hole, holes[i][0], holes[i][1]);
     if (dist(x, y, holes[i][0], holes[i][1]) <= fixX(25)) {
