@@ -38,8 +38,6 @@ class Timer {
     x = _y;
   }
 
-
-
   float getsize() {
     return size;
   }
@@ -69,9 +67,9 @@ class Timer {
     if (counting) {
       float curTime = millis();
       String[] temp = split(time, ':');
-      temp[2] = str(floor(curTime-startTime/1000));
-      temp[1] = str((int)(Integer.parseInt(temp[2])%60));
-      temp[0] = str((int)(Integer.parseInt(temp[1])%60));
+      temp[2] = str(floor((curTime-startTime)/10)%100);
+      temp[1] = str((int)((curTime-startTime)/1000)%60);
+      temp[0] = str((int)((curTime-startTime)/(1000*60))%60);
       time = join(temp,":");
     }
     fill(0);
