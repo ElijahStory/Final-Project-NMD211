@@ -14,6 +14,7 @@ boolean cursorActive = false;
 PImage penguin;
 PImage iceChunk;
 PImage hole;
+PImage fish;
 float dir;
 float x = 0;
 float y = 0;
@@ -28,6 +29,7 @@ boolean levelLoaded = false;
 SlideMenu playAgainMenu;
 level lastLevel;
 Timer timer;
+float[] fishCords = {-100, -100};
 
 
 void setup() {
@@ -95,7 +97,8 @@ void setup() {
   iceChunk.resize((int)fixX(1200), 0);
   hole = loadImage("hole.png");
   hole.resize((int)fixX(860), 0);
-
+  fish = loadImage("fish.png");
+  fish.resize((int)fixX(64), 0);
 
   player = new x_yControler(width/2, height/2, "player");
 }
@@ -114,6 +117,8 @@ void draw() {
   
   float playerX = player.getX();
   float playerY = player.getY();
+  
+  image(fish,fishCords[0], fishCords[1]);
   
   push();
   translate(playerX, playerY);
@@ -145,7 +150,8 @@ void draw() {
   }
     levelMenu.display();
     mainMenu.display();
-    playAgainMenu.display(); 
+    playAgainMenu.display();
+    
 }
 
 float fixX(float x) {
@@ -202,6 +208,8 @@ void deathSceen() {
 void loadLevel(level loadedLevel) {
   player.setX(loadedLevel.getStartX());
   player.setY(loadedLevel.getStartY());
+  fishCords[0] = loadedLevel.getEndX();
+  fishCords[1] = loadedLevel.getEndY();
   holes = loadedLevel.getHoles();
   playerDead = false;
   playerAlpha = 255;
