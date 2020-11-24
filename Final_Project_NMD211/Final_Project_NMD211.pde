@@ -63,15 +63,15 @@ void setup() {
       UL = false;
     }
     String CT = levelFile[index++];
-    float SX = fixX(Integer.parseInt(levelFile[index++]));
-    float SY = fixY(Integer.parseInt(levelFile[index++]));
-    float EX = fixX(Integer.parseInt(levelFile[index++]));
-    float EY = fixY(Integer.parseInt(levelFile[index++]));
+    float SX = Integer.parseInt(levelFile[index++]);
+    float SY = Integer.parseInt(levelFile[index++]);
+    float EX = Integer.parseInt(levelFile[index++]);
+    float EY = Integer.parseInt(levelFile[index++]);
     int AH = Integer.parseInt(levelFile[index++]);
     float[][] tempH = new float[AH][2];
     for (int x = 0; x < tempH.length; x++) {
-      tempH[x][0] = fixX(Integer.parseInt(levelFile[index++]));
-      tempH[x][1] = fixY(Integer.parseInt(levelFile[index++]));
+      tempH[x][0] = Integer.parseInt(levelFile[index++]);
+      tempH[x][1] = Integer.parseInt(levelFile[index++]);
     }
     float tempX;
     float tempY;
@@ -115,12 +115,12 @@ void draw() {
       timer.startTime();
     }
   }
-  
+
   float playerX = player.getX();
   float playerY = player.getY();
-  
-  image(fish,fishCords[0], fishCords[1]);
-  
+
+  image(fish, fishCords[0], fishCords[1]);
+
   push();
   translate(playerX, playerY);
   dir = atan2((playerX-x)-playerX, (playerY-y)-playerY);
@@ -137,7 +137,7 @@ void draw() {
     timer.stopTime();
     deathSceen();
   }
-  
+
   if (!playerDead) {
     player.addY(-keys[0][1]);
     player.addX(-keys[1][1]);
@@ -146,14 +146,11 @@ void draw() {
 
     x = -keys[1][1] + keys[3][1];
     y = -keys[0][1] + keys[2][1];
-    
-    
   }
-    timer.display();
-    levelMenu.display();
-    mainMenu.display();
-    playAgainMenu.display();
-    
+  timer.display();
+  levelMenu.display();
+  mainMenu.display();
+  playAgainMenu.display();
 }
 
 float fixX(float x) {
@@ -202,16 +199,16 @@ void deathSceen() {
     playerAlpha -= 2;
   } else if (!playAgainMenu.getDown()) {
     playAgainMenu.setDown(true);
-    player.setX(lastLevel.getStartX());
-    player.setY(lastLevel.getStartY());
+    player.setX(fixX(lastLevel.getStartX()));
+    player.setY(fixY(lastLevel.getStartY()));
   }
 }
 
 void loadLevel(level loadedLevel) {
-  player.setX(loadedLevel.getStartX());
-  player.setY(loadedLevel.getStartY());
-  fishCords[0] = loadedLevel.getEndX();
-  fishCords[1] = loadedLevel.getEndY();
+  player.setX(fixX(loadedLevel.getStartX()));
+  player.setY(fixY(loadedLevel.getStartY()));
+  fishCords[0] = fixX(loadedLevel.getEndX());
+  fishCords[1] = fixY(loadedLevel.getEndY());
   holes = loadedLevel.getHoles();
   playerDead = false;
   playerAlpha = 255;
@@ -227,14 +224,14 @@ void loadLevel(level loadedLevel) {
 void drawLevel() {
   float x = player.getX();
   float y = player.getY();
-  
-  if(dist(x,y,fishCords[0],fishCords[1]) <= 10){
-     levelWin();
+
+  if (dist(x, y, fishCords[0], fishCords[1]) <= 10) {
+    levelWin();
   }
-  
+
   for (int i = 0; i < holes.length; i++) {
-    image(hole, holes[i][0], holes[i][1]);
-    if (dist(x, y, holes[i][0], holes[i][1]) <= fixX(25)) {
+    image(hole, fixX(holes[i][0]), fixY(holes[i][1]));
+    if (dist(x, y, fixX(holes[i][0]), fixY(holes[i][1])) <= fixX(25)) {
       playerDead = true;
       timer.stopTime();
       deathSceen();
@@ -242,23 +239,73 @@ void drawLevel() {
   }
 }
 
-void levelWin(){
+void levelWin() {
   timer.stopTime();
   gameInPlay = false;
   playerDead = true;
   upDateLevel();
   levelMenu.setDown(true);
+  writeToFile();
 }
 
-void upDateLevel(){
+void upDateLevel() {
   String temp = timer.compare(lastLevel.getTime());
   Button[] buttons = levelMenu.getButton();
   level templevel = buttons[lastLevel.getLevelIndex()].getLevel();
   templevel.setTime(temp);
   buttons[lastLevel.getLevelIndex()].setLabel(templevel.getLName()+"\n\n"+templevel.getTime());
-  if(!lastLevel.getLName().equals("Level 6")){
+  if (!lastLevel.getLName().equals("Level 6")) {
     buttons[lastLevel.getLevelIndex()+1].setUnlocked(true);
   }
+}
+
+void writeToFile() {
+  String[] output = new String[100];
+  int index = 0;
+  Button[] button = levelMenu.getButton();
+  output[0] = str(button.length);
+  index++;
+  for (int i = 0; i < button.length; i++) {
+    level cur = button[i].getLevel();
+    if (++index == output.length) {output = enlarge(output);}
+    output[index] = cur.getLName();
+    if (++index == output.length) {output = enlarge(output);}
+    output[index] = str(cur.getLevelIndex());
+    if (++index == output.length) {output = enlarge(output);}
+    if(cur.getUnlocked()){
+      output[index] = "t";
+    }else{
+      output[index] = "f"; 
+    }
+    if (++index == output.length) {output = enlarge(output);}
+    output[index] = cur.getTime();
+    if (++index == output.length) {output = enlarge(output);}
+    output[index] = str(cur.getStartX());
+    if (++index == output.length) {output = enlarge(output);}
+    output[index] = str(cur.getStartY());
+    if (++index == output.length) {output = enlarge(output);}
+    output[index] = str(cur.getEndX());
+    if (++index == output.length) {output = enlarge(output);}
+    output[index] = str(cur.getEndY());
+    if (++index == output.length) {output = enlarge(output);}
+    output[index] = str(cur.getHoleAmount());
+    float[][] holes = cur.getHoles();
+    for(int x = 0; x < holes.length; x++){
+      if (++index == output.length) {output = enlarge(output);}
+      output[index] = str(holes[x][0]);
+      if (++index == output.length) {output = enlarge(output);}
+      output[index] = str(holes[x][1]);
+    }
+  }
+  saveStrings("level.txt", output);
+}
+
+String[] enlarge(String[] old) {
+  String[] newArray = new String[old.length*2];
+  for (int i = 0; i < old.length; i++) {
+    newArray[i] = old[i];
+  }
+  return newArray;
 }
 
 void keyPressed() {
