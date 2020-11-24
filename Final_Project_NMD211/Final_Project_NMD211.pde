@@ -247,13 +247,16 @@ void levelWin(){
   gameInPlay = false;
   playerDead = true;
   upDateLevel();
+  levelMenu.setDown(true);
 }
 
 void upDateLevel(){
-  String temp = timer.compare(timer.getTime());
-  lastLevel.setTime(temp);
+  String temp = timer.compare(lastLevel.getTime());
+  Button[] buttons = levelMenu.getButton();
+  level templevel = buttons[lastLevel.getLevelIndex()].getLevel();
+  templevel.setTime(temp);
+  buttons[lastLevel.getLevelIndex()].setLabel(templevel.getLName()+"\n\n"+templevel.getTime());
   if(!lastLevel.getLName().equals("Level 6")){
-    Button[] buttons = levelMenu.getButton();
     buttons[lastLevel.getLevelIndex()+1].setUnlocked(true);
   }
 }
