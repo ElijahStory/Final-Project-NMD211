@@ -8,6 +8,7 @@ class level{
   private float startY;
   private float endX;
   private float endY;
+  private int levelIndex;
   
   
   level(){
@@ -20,9 +21,10 @@ class level{
     startY = 0;
     endX = 100;
     endY = 100;
+    levelIndex = 0;
   }
   
-  level(String N, boolean UL, String CT, int AH, float[][] H, float SX, float SY, float EX, float EY){
+  level(String N, boolean UL, String CT, int AH, float[][] H, float SX, float SY, float EX, float EY, int LI){
     levelName = N;
     unlocked = UL;
     completeTime = CT;
@@ -32,6 +34,7 @@ class level{
     startY = SY;
     endX = EX;
     endY = EY;
+    levelIndex = LI;
   }
   
   String getLName(){
@@ -100,5 +103,9 @@ class level{
   
   void setEndY(float y){
     endY = y; 
+  }
+  
+  int getLevelIndex(){
+    return levelIndex; 
   }
 }

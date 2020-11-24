@@ -55,6 +55,7 @@ void setup() {
   int index = 1;
   for (int i = 0; i < Integer.parseInt(levelFile[0]); i++) {
     String LN = levelFile[index++];
+    int levelIndex = Integer.parseInt(levelFile[index++]);
     boolean UL;
     if (levelFile[index++].equals("t")) {
       UL = true;
@@ -81,7 +82,7 @@ void setup() {
       tempX = fixX(440 + 380*(i%3));
       tempY = levelMenu.getY()+fixY(520);
     }
-    level temp = new level(LN, UL, CT, AH, tempH, SX, SY, EX, EY);
+    level temp = new level(LN, UL, CT, AH, tempH, SX, SY, EX, EY, levelIndex);
     levelMenu.addItem(new Button(tempX, tempY, fixX(285), fixY(300), UL, LN+"\n"+CT, fixX(50), temp));
   }
 
@@ -146,8 +147,9 @@ void draw() {
     x = -keys[1][1] + keys[3][1];
     y = -keys[0][1] + keys[2][1];
     
-    timer.display();
+    
   }
+    timer.display();
     levelMenu.display();
     mainMenu.display();
     playAgainMenu.display();
@@ -227,8 +229,7 @@ void drawLevel() {
   float y = player.getY();
   
   if(dist(x,y,fishCords[0],fishCords[1]) <= 10){
-     gameInPlay = false;
-     playerDead = false;
+     levelWin();
   }
   
   for (int i = 0; i < holes.length; i++) {
@@ -238,6 +239,22 @@ void drawLevel() {
       timer.stopTime();
       deathSceen();
     }
+  }
+}
+
+void levelWin(){
+  timer.stopTime();
+  gameInPlay = false;
+  playerDead = true;
+  upDateLevel();
+}
+
+void upDateLevel(){
+  String temp = timer.compare(timer.getTime());
+  lastLevel.setTime(temp);
+  if(!lastLevel.getLName().equals("Level 6")){
+    Button[] buttons = levelMenu.getButton();
+    buttons[lastLevel.getLevelIndex()+1].setUnlocked(true);
   }
 }
 

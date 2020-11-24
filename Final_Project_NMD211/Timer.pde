@@ -62,6 +62,20 @@ class Timer {
   void stopTime() {
     counting = false;
   }
+  
+  String compare(String check){
+    String[] top = split(time,":");
+    String[] cur = split(check,":");
+    if(Integer.parseInt(cur[0]) < Integer.parseInt(top[0])){
+      return check;
+    }else if(Integer.parseInt(cur[1]) < Integer.parseInt(top[1])){
+      return check;
+    }else if(Integer.parseInt(cur[2]) < Integer.parseInt(top[2])){
+      return check;
+    }else{
+      return time; 
+    }
+  }
 
   void display() {
     if (counting) {
