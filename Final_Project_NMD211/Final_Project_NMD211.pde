@@ -300,7 +300,7 @@ void upDateLevel() {
 //}
 
 void writeToFile() {
-  PrintWriter output = createWriter("levels.txt");
+  PrintWriter output = createWriter("data/levels.txt");
   Button[] button = levelMenu.getButton();
   output.println(button.length);
   for (int i = 0; i < button.length; i++) {
