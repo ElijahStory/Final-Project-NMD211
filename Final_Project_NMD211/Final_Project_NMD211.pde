@@ -51,7 +51,7 @@ void setup() {
 
   timer = new Timer(fixX(1750), fixY(96), fixX(50));
 
-  levelFile = loadStrings("levels.txt");
+  levelFile = loadStrings("data/levels.txt");
   int index = 1;
   for (int i = 0; i < Integer.parseInt(levelFile[0]); i++) {
     String LN = levelFile[index++];
@@ -259,45 +259,73 @@ void upDateLevel() {
   }
 }
 
+//void writeToFile() {
+//  String[] output = new String[100];
+//  int index = 0;
+//  Button[] button = levelMenu.getButton();
+//  output[index] = str(button.length);
+//  for (int i = 0; i < button.length; i++) {
+//    level cur = button[i].getLevel();
+//    if (++index == output.length) {output = enlarge(output);}
+//    output[index] = cur.getLName();
+//    if (++index == output.length) {output = enlarge(output);}
+//    output[index] = str(cur.getLevelIndex());
+//    if (++index == output.length) {output = enlarge(output);}
+//    if(cur.getUnlocked()){
+//      output[index] = "t";
+//    }else{
+//      output[index] = "f"; 
+//    }
+//    if (++index == output.length) {output = enlarge(output);}
+//    output[index] = cur.getTime();
+//    if (++index == output.length) {output = enlarge(output);}
+//    output[index] = str(cur.getStartX());
+//    if (++index == output.length) {output = enlarge(output);}
+//    output[index] = str(cur.getStartY());
+//    if (++index == output.length) {output = enlarge(output);}
+//    output[index] = str(cur.getEndX());
+//    if (++index == output.length) {output = enlarge(output);}
+//    output[index] = str(cur.getEndY());
+//    if (++index == output.length) {output = enlarge(output);}
+//    output[index] = str(cur.getHoleAmount());
+//    float[][] holes = cur.getHoles();
+//    for(int x = 0; x < holes.length; x++){
+//      if (++index == output.length) {output = enlarge(output);}
+//      output[index] = str(holes[x][0]);
+//      if (++index == output.length) {output = enlarge(output);}
+//      output[index] = str(holes[x][1]);
+//    }
+//  }
+//  saveStrings("data/level.txt", output);
+//}
+
 void writeToFile() {
-  String[] output = new String[100];
-  int index = 0;
+  PrintWriter output = createWriter("levels.txt");
   Button[] button = levelMenu.getButton();
-  output[0] = str(button.length);
-  index++;
+  output.println(button.length);
   for (int i = 0; i < button.length; i++) {
     level cur = button[i].getLevel();
-    if (++index == output.length) {output = enlarge(output);}
-    output[index] = cur.getLName();
-    if (++index == output.length) {output = enlarge(output);}
-    output[index] = str(cur.getLevelIndex());
-    if (++index == output.length) {output = enlarge(output);}
+    output.println(cur.getLName());
+    output.println(cur.getLevelIndex());
     if(cur.getUnlocked()){
-      output[index] = "t";
+      output.println("t");
     }else{
-      output[index] = "f"; 
+      output.println("f"); 
     }
-    if (++index == output.length) {output = enlarge(output);}
-    output[index] = cur.getTime();
-    if (++index == output.length) {output = enlarge(output);}
-    output[index] = str(cur.getStartX());
-    if (++index == output.length) {output = enlarge(output);}
-    output[index] = str(cur.getStartY());
-    if (++index == output.length) {output = enlarge(output);}
-    output[index] = str(cur.getEndX());
-    if (++index == output.length) {output = enlarge(output);}
-    output[index] = str(cur.getEndY());
-    if (++index == output.length) {output = enlarge(output);}
-    output[index] = str(cur.getHoleAmount());
+    output.println(cur.getTime());
+    output.println(cur.getStartX());
+    output.println(cur.getStartY());
+    output.println(cur.getEndX());
+    output.println(cur.getEndY());
+    output.println(cur.getHoleAmount());
     float[][] holes = cur.getHoles();
     for(int x = 0; x < holes.length; x++){
-      if (++index == output.length) {output = enlarge(output);}
-      output[index] = str(holes[x][0]);
-      if (++index == output.length) {output = enlarge(output);}
-      output[index] = str(holes[x][1]);
+      output.println(holes[x][0]);
+      output.println(holes[x][1]);
     }
   }
-  saveStrings("level.txt", output);
+  output.flush();
+  output.close();
 }
 
 String[] enlarge(String[] old) {
