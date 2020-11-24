@@ -17,7 +17,7 @@ PImage hole;
 float dir;
 float x = 0;
 float y = 0;
-boolean playerDead = false;
+boolean playerDead = true;
 float playerAlpha = 255;
 String[] levelFile;
 SlideMenu levelMenu;
@@ -43,7 +43,7 @@ void setup() {
   playAgainMenu.addItem(new Button(fixX(781), playAgainMenu.getY()+fixY(40), fixX(340), fixY(100), true, "Retry Level", fixX(30), null));
   playAgainMenu.addItem(new Button(fixX(781), playAgainMenu.getY()+fixY(160), fixX(340), fixY(100), true, "Level Menu", fixX(30), null));
 
-  String msg = "This is a template for a message\nI will have at the start of the game\nexplaining how to play.ssssssssssssssssssssssssssssssssssss\nsdfffffffffffffffffffffffffffffffffffffffffffffff\nhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh\nwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww";
+  String msg = "This is a template for a message\nI will have at the start of the game\nexplaining how to play.\n\nUse 'w' 'a' 's' 'd' to move the pengiun.\nAvoid the edge of the ice burg and the holes.\nGet to the fish as fast as posible!";
   Button tempB = new Button(fixX(820), fixY(850), fixX(300), fixY(100), true, "Begin Game!", fixX(30), null);
   mainMenu = new MainMenu(fixX(329), fixY(83), fixX(1270), fixY(900), true, fixY(18), msg, tempB, fixX(30));
 
@@ -131,11 +131,21 @@ void draw() {
     timer.stopTime();
     deathSceen();
   }
+  
+  if (!playerDead) {
+    player.addY(-keys[0][1]);
+    player.addX(-keys[1][1]);
+    player.addY(keys[2][1]);
+    player.addX(keys[3][1]);
 
-  timer.display();
-  levelMenu.display();
-  mainMenu.display();
-  playAgainMenu.display();
+    x = -keys[1][1] + keys[3][1];
+    y = -keys[0][1] + keys[2][1];
+    
+    timer.display();
+  }
+    levelMenu.display();
+    mainMenu.display();
+    playAgainMenu.display(); 
 }
 
 float fixX(float x) {
@@ -175,16 +185,6 @@ void inputUpdate() {
     } else if (keys[i][1] < 0) {
       keys[i][1] = 0;
     }
-  }
-
-  if (!playerDead) {
-    player.addY(-keys[0][1]);
-    player.addX(-keys[1][1]);
-    player.addY(keys[2][1]);
-    player.addX(keys[3][1]);
-
-    x = -keys[1][1] + keys[3][1];
-    y = -keys[0][1] + keys[2][1];
   }
 }
 
