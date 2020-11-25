@@ -71,14 +71,14 @@ class Timer {
         return time;
       }else if(Integer.parseInt(cur[1]) < Integer.parseInt(top[1])){
         return time;
-      }else if(Integer.parseInt(cur[2]) < Integer.parseInt(top[2])){
-        return time;
-      }else{
-        return check; 
+      }else if(Integer.parseInt(cur[1]) == Integer.parseInt(top[1])){
+        if(Integer.parseInt(cur[2]) < Integer.parseInt(top[2])){
+          return time;
+        }
       }
-    }else{
-      return time; 
+        return check; 
     }
+    return time;
   }
 
   void display() {

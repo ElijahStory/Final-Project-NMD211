@@ -91,7 +91,7 @@ void setup() {
 
   slideX = fixX(0.02);
   slideY = fixY(0.02);
-  speedMax = 3;
+  speedMax = fixX(3);
 
   penguin = loadImage("penguin-V2.png");
   penguin.resize(0, (int)fixY(30));
@@ -272,7 +272,6 @@ void writeToFile() {
     level cur = button[i].getLevel();
     output.println(cur.getLName());
     output.println(cur.getLevelIndex());
-    println(cur.getUnlocked());
     if(cur.getUnlocked()){
       output.println("t");
     }else{
