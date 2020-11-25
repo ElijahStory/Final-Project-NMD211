@@ -30,6 +30,7 @@ SlideMenu playAgainMenu;
 level lastLevel;
 Timer timer;
 float[] fishCords = {-100, -100};
+boolean fileWritten = false;
 
 
 void setup() {
@@ -63,15 +64,15 @@ void setup() {
       UL = false;
     }
     String CT = levelFile[index++];
-    float SX = Integer.parseInt(levelFile[index++]);
-    float SY = Integer.parseInt(levelFile[index++]);
-    float EX = Integer.parseInt(levelFile[index++]);
-    float EY = Integer.parseInt(levelFile[index++]);
+    float SX = Float.parseFloat(levelFile[index++]);
+    float SY = Float.parseFloat(levelFile[index++]);
+    float EX = Float.parseFloat(levelFile[index++]);
+    float EY = Float.parseFloat(levelFile[index++]);
     int AH = Integer.parseInt(levelFile[index++]);
     float[][] tempH = new float[AH][2];
     for (int x = 0; x < tempH.length; x++) {
-      tempH[x][0] = Integer.parseInt(levelFile[index++]);
-      tempH[x][1] = Integer.parseInt(levelFile[index++]);
+      tempH[x][0] = Float.parseFloat(levelFile[index++]);
+      tempH[x][1] = Float.parseFloat(levelFile[index++]);
     }
     float tempX;
     float tempY;
@@ -211,6 +212,7 @@ void loadLevel(level loadedLevel) {
   fishCords[1] = fixY(loadedLevel.getEndY());
   holes = loadedLevel.getHoles();
   playerDead = false;
+  fileWritten = false;
   playerAlpha = 255;
   keys[0][1] = 0;
   keys[1][1] = 0;
@@ -225,7 +227,7 @@ void drawLevel() {
   float x = player.getX();
   float y = player.getY();
 
-  if (dist(x, y, fishCords[0], fishCords[1]) <= 10) {
+  if (dist(x, y, fishCords[0], fishCords[1]) <= 10 && !fileWritten) {
     levelWin();
   }
 
@@ -246,6 +248,7 @@ void levelWin() {
   upDateLevel();
   levelMenu.setDown(true);
   writeToFile();
+  fileWritten = true;
 }
 
 void upDateLevel() {
@@ -253,51 +256,13 @@ void upDateLevel() {
   Button[] buttons = levelMenu.getButton();
   level templevel = buttons[lastLevel.getLevelIndex()].getLevel();
   templevel.setTime(temp);
-  buttons[lastLevel.getLevelIndex()].setLabel(templevel.getLName()+"\n\n"+templevel.getTime());
+  buttons[lastLevel.getLevelIndex()].setLabel(templevel.getLName()+"\n"+templevel.getTime());
   if (!lastLevel.getLName().equals("Level 6")) {
+    level lTemp = buttons[lastLevel.getLevelIndex()+1].getLevel();
+    lTemp.setUnlocked(true);
     buttons[lastLevel.getLevelIndex()+1].setUnlocked(true);
   }
 }
-
-//void writeToFile() {
-//  String[] output = new String[100];
-//  int index = 0;
-//  Button[] button = levelMenu.getButton();
-//  output[index] = str(button.length);
-//  for (int i = 0; i < button.length; i++) {
-//    level cur = button[i].getLevel();
-//    if (++index == output.length) {output = enlarge(output);}
-//    output[index] = cur.getLName();
-//    if (++index == output.length) {output = enlarge(output);}
-//    output[index] = str(cur.getLevelIndex());
-//    if (++index == output.length) {output = enlarge(output);}
-//    if(cur.getUnlocked()){
-//      output[index] = "t";
-//    }else{
-//      output[index] = "f"; 
-//    }
-//    if (++index == output.length) {output = enlarge(output);}
-//    output[index] = cur.getTime();
-//    if (++index == output.length) {output = enlarge(output);}
-//    output[index] = str(cur.getStartX());
-//    if (++index == output.length) {output = enlarge(output);}
-//    output[index] = str(cur.getStartY());
-//    if (++index == output.length) {output = enlarge(output);}
-//    output[index] = str(cur.getEndX());
-//    if (++index == output.length) {output = enlarge(output);}
-//    output[index] = str(cur.getEndY());
-//    if (++index == output.length) {output = enlarge(output);}
-//    output[index] = str(cur.getHoleAmount());
-//    float[][] holes = cur.getHoles();
-//    for(int x = 0; x < holes.length; x++){
-//      if (++index == output.length) {output = enlarge(output);}
-//      output[index] = str(holes[x][0]);
-//      if (++index == output.length) {output = enlarge(output);}
-//      output[index] = str(holes[x][1]);
-//    }
-//  }
-//  saveStrings("data/level.txt", output);
-//}
 
 void writeToFile() {
   PrintWriter output = createWriter("data/levels.txt");
@@ -307,6 +272,7 @@ void writeToFile() {
     level cur = button[i].getLevel();
     output.println(cur.getLName());
     output.println(cur.getLevelIndex());
+    println(cur.getUnlocked());
     if(cur.getUnlocked()){
       output.println("t");
     }else{
