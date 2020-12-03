@@ -28,10 +28,7 @@ void loop() {
 
     char input = Serial.read();
 
-    if (input == 'x') {
-      Serial.println(accel.acceleration.x);
-    } else if (input == 'y') {
-      Serial.println(accel.acceleration.y);
-    }
+    Serial.print(accel.acceleration.x,4);
+    Serial.print(accel.acceleration.y,4);
   }
 }

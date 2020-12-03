@@ -4,8 +4,9 @@
 
 //Inspiration for key input from: https://forum.processing.org/two/discussion/22644/two-keys-pressed-three-keys-pressed-simultaneously
 
+import processing.serial.*;                          //import the Serial library
 
-float[][] keys = {{0, 0}, {0, 0}, {0, 0}, {0, 0}};  //index order 0=w, 1=a, 2=s, 3=d
+float[][] keys = {{0, 0}, {0, 0}, {0, 0}, {0, 0}};   //index order 0=w, 1=a, 2=s, 3=d
 float speedMax;           //speed the dot moves
 x_yControler player;
 float slideX;
@@ -31,6 +32,7 @@ level lastLevel;
 Timer timer;
 float[] fishCords = {-100, -100};
 boolean fileWritten = false;
+Serial myPort;                             //make the variable that will hold Serial instance
 
 
 void setup() {
@@ -40,6 +42,8 @@ void setup() {
 
   imageMode(CENTER);
   textAlign(CENTER, CENTER);
+  
+  myPort = new Serial(this,"COM5",9600);   //makes the Serial instance
 
   levelMenu = new SlideMenu(fixX(329), fixY(83), fixX(1270), fixY(900), false, fixY(18));
   playAgainMenu = new SlideMenu(fixX(753), fixY(387), fixX(400), fixY(300), false, fixY(22));
@@ -334,7 +338,7 @@ void keyReleased() {
 }
 
 void mousePressed() {
-  println(mouseX, mouseY);
+  //println(mouseX, mouseY);
   if (mainMenu.getButton().buttonClicked()) {
     levelMenu.setDown(true);
     mainMenu.setDown(false);
@@ -360,4 +364,40 @@ void mousePressed() {
       levelMenu.setDown(true);
     }
   }
+}
+
+void serialX(String oldX){
+  float x = Float.parseFloat(oldX);
+  println("X = "+x);
+  if(x > 0.2 || x < -0.2){
+    if(x > 0){
+      keys[3][1] = x;
+    }else{
+      keys[1][1] = x;
+    }
+  }
+}
+
+void serialY(String oldY){
+  float y = Float.parseFloat(oldY);
+  println("Y = "+y);
+  if(y > 0.2 || y < -0.2){
+    if(y > 0){
+      keys[2][1] = y;
+    }else{
+      keys[0][1] = y;
+    }
+  }
+}
+
+void serialEvent(Serial myPort){           //handles the Serial port event
+  String input = myPort.readStringUntil('\n');
+  if(input != "s"){
+    if(input != null){println(input);}
+     //if(input != null){serialX(input);}
+     //input = myPort.readString();
+     //if(input != null){serialY(input);}
+  }
+  
+  myPort.write(0);                         //tells the ardunio that it is ready for new input
 }
