@@ -43,7 +43,9 @@ void setup() {
   imageMode(CENTER);
   textAlign(CENTER, CENTER);
   
-  myPort = new Serial(this,"COM5",9600);   //makes the Serial instance
+  //println(Serial.list());
+  //myPort = new Serial(this,"COM5",9600);   //makes the Serial instance
+  myPort = new Serial(this,"/dev/cu.usbmodem142101",9600);   //makes the Serial instance
   myPort.bufferUntil('\n');
 
   levelMenu = new SlideMenu(fixX(329), fixY(83), fixX(1270), fixY(900), false, fixY(18));
