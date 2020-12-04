@@ -44,9 +44,9 @@ void setup() {
   textAlign(CENTER, CENTER);
   
   //printArray(Serial.list());                                 //Used to find what usb Arduino is in
-  //myPort = new Serial(this,"COM5",9600);                       //makes the Serial instance    #### windows
+  myPort = new Serial(this,"COM5",9600);                       //makes the Serial instance    #### windows
   //myPort = new Serial(this,"/dev/cu.usbmodem142101",9600);   //makes the Serial instance    #### mac
-  //myPort.bufferUntil('\n');
+  myPort.bufferUntil('\n');
 
   levelMenu = new SlideMenu(fixX(329), fixY(83), fixX(1270), fixY(900), false, fixY(18));
   playAgainMenu = new SlideMenu(fixX(753), fixY(387), fixX(400), fixY(300), false, fixY(22));
@@ -374,9 +374,15 @@ void serialX(String oldX){
   print("X = "+x+"   ");
   if(x > 0.2 || x < -0.2){
     if(x > 0){
-      keys[3][1] = x;
+      x = abs(x);
+      if(keys[3][1] < x){
+        keys[3][1] = x;
+      }
     }else{
-      keys[1][1] = abs(x);
+      x = abs(x);
+      if(keys[1][1] < x){
+        keys[1][1] = x;
+      }
     }
   }
 }
@@ -386,9 +392,15 @@ void serialY(String oldY){
   println("Y = "+y);
   if(y > 0.2 || y < -0.2){
     if(y < 0){
-      keys[2][1] = abs(y);
+      y = abs(y);
+      if(keys[2][1] < y){
+        keys[2][1] = y;
+      }
     }else{
-      keys[0][1] = abs(y);
+      y = abs(y);
+      if(keys[0][1] < y){
+        keys[0][1] = y;
+      }
     }
   }
 }
