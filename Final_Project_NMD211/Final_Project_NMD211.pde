@@ -36,17 +36,17 @@ Serial myPort;                             //make the variable that will hold Se
 
 
 void setup() {
-  size(1080, 608);
-  //size(1920, 1080);
+  //size(1080, 608);
+  size(1920, 1080);
   //fullScreen();
 
   imageMode(CENTER);
   textAlign(CENTER, CENTER);
   
   //printArray(Serial.list());                                 //Used to find what usb Arduino is in
-  myPort = new Serial(this,"COM5",9600);                       //makes the Serial instance    #### windows
+  //myPort = new Serial(this,"COM5",9600);                       //makes the Serial instance    #### windows
   //myPort = new Serial(this,"/dev/cu.usbmodem142101",9600);   //makes the Serial instance    #### mac
-  myPort.bufferUntil('\n');
+  //myPort.bufferUntil('\n');
 
   levelMenu = new SlideMenu(fixX(329), fixY(83), fixX(1270), fixY(900), false, fixY(18));
   playAgainMenu = new SlideMenu(fixX(753), fixY(387), fixX(400), fixY(300), false, fixY(22));
@@ -341,7 +341,7 @@ void keyReleased() {
 }
 
 void mousePressed() {
-  //println(mouseX, mouseY);
+  println(mouseX, mouseY);
   if (mainMenu.getButton().buttonClicked()) {
     levelMenu.setDown(true);
     mainMenu.setDown(false);
