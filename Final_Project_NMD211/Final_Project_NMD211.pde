@@ -43,9 +43,9 @@ void setup() {
   imageMode(CENTER);
   textAlign(CENTER, CENTER);
   
-  //println(Serial.list());
-  //myPort = new Serial(this,"COM5",9600);   //makes the Serial instance
-  myPort = new Serial(this,"/dev/cu.usbmodem142101",9600);   //makes the Serial instance
+  //printArray(Serial.list());                                 //Used to find what usb Arduino is in
+  myPort = new Serial(this,"COM5",9600);                       //makes the Serial instance    #### windows
+  //myPort = new Serial(this,"/dev/cu.usbmodem142101",9600);   //makes the Serial instance    #### mac
   myPort.bufferUntil('\n');
 
   levelMenu = new SlideMenu(fixX(329), fixY(83), fixX(1270), fixY(900), false, fixY(18));
@@ -371,7 +371,7 @@ void mousePressed() {
 
 void serialX(String oldX){
   float x = Float.parseFloat(oldX);
-  print("X = "+x+"\t|\t");
+  print("X = "+x+"   ");
   if(x > 0.2 || x < -0.2){
     if(x > 0){
       keys[3][1] = x;
