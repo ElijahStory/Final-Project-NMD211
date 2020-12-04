@@ -44,6 +44,7 @@ void setup() {
   textAlign(CENTER, CENTER);
   
   myPort = new Serial(this,"COM5",9600);   //makes the Serial instance
+  myPort.bufferUntil('\n');
 
   levelMenu = new SlideMenu(fixX(329), fixY(83), fixX(1270), fixY(900), false, fixY(18));
   playAgainMenu = new SlideMenu(fixX(753), fixY(387), fixX(400), fixY(300), false, fixY(22));
@@ -368,12 +369,12 @@ void mousePressed() {
 
 void serialX(String oldX){
   float x = Float.parseFloat(oldX);
-  println("X = "+x);
+  print("X = "+x+"\t|\t");
   if(x > 0.2 || x < -0.2){
     if(x > 0){
       keys[3][1] = x;
     }else{
-      keys[1][1] = x;
+      keys[1][1] = abs(x);
     }
   }
 }
@@ -382,21 +383,20 @@ void serialY(String oldY){
   float y = Float.parseFloat(oldY);
   println("Y = "+y);
   if(y > 0.2 || y < -0.2){
-    if(y > 0){
-      keys[2][1] = y;
+    if(y < 0){
+      keys[2][1] = abs(y);
     }else{
-      keys[0][1] = y;
+      keys[0][1] = abs(y);
     }
   }
 }
 
 void serialEvent(Serial myPort){           //handles the Serial port event
-  String input = myPort.readStringUntil('\n');
-  if(input != "s"){
-    if(input != null){println(input);}
-     //if(input != null){serialX(input);}
-     //input = myPort.readString();
-     //if(input != null){serialY(input);}
+  String input = myPort.readString();
+  if(input != null && input .length() > 7){
+    int tabLocation = input.indexOf('\t');
+    serialX(input.substring(0,tabLocation));
+    serialY(input.substring(tabLocation));
   }
   
   myPort.write(0);                         //tells the ardunio that it is ready for new input

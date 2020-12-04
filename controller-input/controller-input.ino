@@ -28,7 +28,8 @@ void loop() {
 
     char input = Serial.read();
 
-    Serial.print(accel.acceleration.x,4);
-    Serial.print(accel.acceleration.y,4);
+    Serial.print(accel.acceleration.x,2);
+    Serial.print('\t');
+    Serial.println(accel.acceleration.y,2);
   }
 }
