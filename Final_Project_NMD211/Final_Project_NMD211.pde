@@ -39,8 +39,8 @@ int tempIndex = 0;
 
 void setup() {
   //size(1080, 608);
-  size(1920, 1080);
-  //fullScreen();
+  //size(1920, 1080);
+  fullScreen();
 
   imageMode(CENTER);
   textAlign(CENTER, CENTER);
