@@ -33,6 +33,8 @@ Timer timer;
 float[] fishCords = {-100, -100};
 boolean fileWritten = false;
 Serial myPort;                             //make the variable that will hold Serial instance
+int[][] tempMOUSE = new int[100][2];
+int tempIndex = 0;
 
 
 void setup() {
@@ -58,8 +60,10 @@ void setup() {
   mainMenu = new MainMenu(fixX(329), fixY(83), fixX(1270), fixY(900), true, fixY(18), msg, tempB, fixX(30));
 
   timer = new Timer(fixX(1750), fixY(96), fixX(50));
-
+  
   levelFile = loadStrings("data/levels.txt");
+  //levelFile = loadStrings("data/levels copy - Copy.txt");
+  
   int index = 1;
   for (int i = 0; i < Integer.parseInt(levelFile[0]); i++) {
     String LN = levelFile[index++];
@@ -159,6 +163,11 @@ void draw() {
   levelMenu.display();
   mainMenu.display();
   playAgainMenu.display();
+  
+  for(int i = 0; i < tempIndex; i++){
+     fill(255,0,0);
+     ellipse(tempMOUSE[i][0],tempMOUSE[i][1],40,40);
+  }
 }
 
 float fixX(float x) {
@@ -239,8 +248,8 @@ void drawLevel() {
   }
 
   for (int i = 0; i < holes.length; i++) {
-    image(hole, fixX(holes[i][0]), fixY(holes[i][1]));
-    if (dist(x, y, fixX(holes[i][0]), fixY(holes[i][1])) <= fixX(25)) {
+    image(hole, round(fixX(holes[i][0])), round(fixY(holes[i][1])));
+    if (dist(x, y, round(fixX(holes[i][0])), round(fixY(holes[i][1]))) <= fixX(25)) {
       playerDead = true;
       timer.stopTime();
       deathSceen();
@@ -341,7 +350,15 @@ void keyReleased() {
 }
 
 void mousePressed() {
-  println(mouseX, mouseY);
+  //println("\n\nNEW ENTRY==========="+(tempIndex-1));
+  //tempMOUSE[tempIndex][0] = mouseX;
+  //tempMOUSE[tempIndex][1] = mouseY;
+  //tempIndex++;
+  //for(int i = 0; i < tempIndex; i++){
+  //  println(tempMOUSE[i][0]+"\n"+tempMOUSE[i][1]);
+  //}
+  
+  
   if (mainMenu.getButton().buttonClicked()) {
     levelMenu.setDown(true);
     mainMenu.setDown(false);
