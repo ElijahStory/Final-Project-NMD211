@@ -78,7 +78,10 @@ void setup() {
   playAgainMenu.addItem(new Button(fixX(781), playAgainMenu.getY()+fixY(160), fixX(340), fixY(100), true, "Level Menu", fixX(30), null));  //adds the level menu button to menu
 
   //string that will be displayed on the mainMenu
-  String msg = "This is a template for a message\nI will have at the start of the game\nexplaining how to play.\n\nUse 'w' 'a' 's' 'd' to move the pengiun.\nAvoid the edge of the ice burg and the holes.\nGet to the fish as fast as posible!";
+  String msg = "Help waddles the penguin get across the iceburg to reach\nthe fish as fast as possible. Be careful though! The ice is slippery."+
+               "\nDo not slide off the iceberg or into one of the holes.\n\nUse the WASD keys to move.\nIf you are using the Arduino, "+
+               "tilt the board in the direction you wish to move.";
+               
   Button tempB = new Button(fixX(820), fixY(850), fixX(300), fixY(100), true, "Begin Game!", fixX(30), null);  //makes the start button for main menu
   mainMenu = new MainMenu(fixX(329), fixY(83), fixX(1270), fixY(900), true, fixY(18), msg, tempB, fixX(30));   //makes the main menu
 
