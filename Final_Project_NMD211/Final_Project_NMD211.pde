@@ -7,71 +7,88 @@
 /*
 This is a game that can be played with the WASD keys or can be played with the Arduino/accelerometer. 
 Instructions to building the Arduino controller can be found in the GitHub repository. 
-The game reads and loads 6 levels from a text file in the data folder. After each level is won, the level file is updated.
+The game reads and loads 6 levels from a text file in the data folder. After each level is won, the level file is updated. 
+The game will load in full screen mode and will adjust all the variables accordingly. 
+This means that it should look and play the same no matter what size screen it is played. 
+#One potential flaw is that the penguin seems to move at different speeds when I play it on my desktop(Windows),
+and when I play it on my laptop(Mac). The screens are different sizes. The game looks good on both, it's just the speed that seems to change.#
 
-
+The goal of the game is to reach the fish as fast as possible without sliding off the iceberg or into a hole. 
+Each level is locked(other than the first one) and will only be unlocked once the previous level is won. 
+Each unlocked level can be replayed multiple times to try and better the score.
 */
 
 import processing.serial.*;                          //import the Serial library
 
 float[][] keys = {{0, 0}, {0, 0}, {0, 0}, {0, 0}};   //index order [X][]=(0=w, 1=a, 2=s, 3=d), [][X]=(speed for that direction)
-float speedMax;                                      //speed the dot moves
-x_yControler player;
-float slideX;
-float slideY;
-boolean cursorActive = false;
-PImage penguin;
-PImage iceChunk;
-PImage hole;
-PImage fish;
-float dir;
-float x = 0;
-float y = 0;
-boolean playerDead = true;
-float playerAlpha = 255;
-String[] levelFile;
-SlideMenu levelMenu;
-boolean gameInPlay = false;
-MainMenu mainMenu;
-float[][] holes;
-boolean levelLoaded = false;
-SlideMenu playAgainMenu;
-level lastLevel;
-Timer timer;
-float[] fishCords = {-100, -100};
-boolean fileWritten = false;
-Serial myPort;                             //make the variable that will hold Serial instance
-int[][] tempMOUSE = new int[100][2];
-int tempIndex = 0;
+float speedMax;                                      //max speed the peguin can move in any direction
+x_yControler player;                                 //player object
+float slideX;                                        //holds the speed that the player's x will slide
+float slideY;                                        //holds the speed that the player's y will slide
+boolean cursorActive = false;                        //this is not used yet. it changes how the peguin moves if the Arduino need a cursor
+PImage penguin;                                      //holds the image for the peguin
+PImage iceChunk;                                     //holds the image for the iceburg
+PImage hole;                                         //holds the image for the hole in the ice
+PImage fish;                                         //holds the image for the fish
+float dir;                                           //used to rotate the peguin image based on movement
+float x = 0;                                         //used to calculate the dir
+float y = 0;                                         //used to calculate the dir
+boolean playerDead = true;                           //is the player dead
+float playerAlpha = 255;                             //used in the death animation
+String[] levelFile;                                  //holds all the raw info from level text file
+SlideMenu levelMenu;                                 //menu object for the menu that holds the levels
+boolean gameInPlay = false;                          //is the player actively in a level
+MainMenu mainMenu;                                   //menu object for the main menu you see at the beginning
+float[][] holes;                                     //used to hold all the holes in loadded level
+boolean levelLoaded = false;                         //is the level done loading
+SlideMenu playAgainMenu;                             //menu object for the menu you see if you die
+level lastLevel;                                     //holds the level object that was last loaded
+Timer timer;                                         //timer object
+float[] fishCords = {-100, -100};                    //will hold the cords for the fish
+boolean fileWritten = false;                         //has the file been written
+Serial myPort;                                       //make the variable that will hold Serial instance
+//int[][] tempMOUSE = new int[100][2];                 //this was only used to help design the levels
+//int tempIndex = 0;                                   //this was only used to help design the levels
 
 
 void setup() {
-  //size(1080, 608);
-  //size(1920, 1080);
+  //size(1080, 608);      //used for testing
+  //size(1920, 1080);     //used for testing
   fullScreen();
 
   imageMode(CENTER);
   textAlign(CENTER, CENTER);
   
+  
+  /*
+  if the Arduino will be used, uncomment either one of myPort assignments based on OS. 
+  Also uncomment the budderUntill line. You may need to change the location the Arduino is located. 
+  You can uncomment the printArray line to help find where the port is.
+  */
+  
   //printArray(Serial.list());                                 //Used to find what usb Arduino is in
-  //myPort = new Serial(this,"COM5",9600);                       //makes the Serial instance    #### windows
+  //myPort = new Serial(this,"COM5",9600);                     //makes the Serial instance    #### windows
   //myPort = new Serial(this,"/dev/cu.usbmodem142101",9600);   //makes the Serial instance    #### mac
-  //myPort.bufferUntil('\n');
+  //myPort.bufferUntil('\n');                                  //tells the serial when to say it has all the info
 
-  levelMenu = new SlideMenu(fixX(329), fixY(83), fixX(1270), fixY(900), false, fixY(18));
-  playAgainMenu = new SlideMenu(fixX(753), fixY(387), fixX(400), fixY(300), false, fixY(22));
-  playAgainMenu.addItem(new Button(fixX(781), playAgainMenu.getY()+fixY(40), fixX(340), fixY(100), true, "Retry Level", fixX(30), null));
-  playAgainMenu.addItem(new Button(fixX(781), playAgainMenu.getY()+fixY(160), fixX(340), fixY(100), true, "Level Menu", fixX(30), null));
 
+  levelMenu = new SlideMenu(fixX(329), fixY(83), fixX(1270), fixY(900), false, fixY(18));                                                  //makes the level menu
+  playAgainMenu = new SlideMenu(fixX(753), fixY(387), fixX(400), fixY(300), false, fixY(22));                                              //makes the play again menu
+  playAgainMenu.addItem(new Button(fixX(781), playAgainMenu.getY()+fixY(40), fixX(340), fixY(100), true, "Retry Level", fixX(30), null));  //adds the retry button to the menu
+  playAgainMenu.addItem(new Button(fixX(781), playAgainMenu.getY()+fixY(160), fixX(340), fixY(100), true, "Level Menu", fixX(30), null));  //adds the level menu button to menu
+
+  //string that will be displayed on the mainMenu
   String msg = "This is a template for a message\nI will have at the start of the game\nexplaining how to play.\n\nUse 'w' 'a' 's' 'd' to move the pengiun.\nAvoid the edge of the ice burg and the holes.\nGet to the fish as fast as posible!";
-  Button tempB = new Button(fixX(820), fixY(850), fixX(300), fixY(100), true, "Begin Game!", fixX(30), null);
-  mainMenu = new MainMenu(fixX(329), fixY(83), fixX(1270), fixY(900), true, fixY(18), msg, tempB, fixX(30));
+  Button tempB = new Button(fixX(820), fixY(850), fixX(300), fixY(100), true, "Begin Game!", fixX(30), null);  //makes the start button for main menu
+  mainMenu = new MainMenu(fixX(329), fixY(83), fixX(1270), fixY(900), true, fixY(18), msg, tempB, fixX(30));   //makes the main menu
 
-  timer = new Timer(fixX(1750), fixY(96), fixX(50));
+  timer = new Timer(fixX(1750), fixY(96), fixX(50));            //makes the timer
   
-  levelFile = loadStrings("data/levels.txt");
-  //levelFile = loadStrings("data/levels copy - Copy.txt");
+  levelFile = loadStrings("data/levels.txt");                   //loads the level file
+  //levelFile = loadStrings("data/levels copy - Copy.txt");     //was used for quick testing
   
+  
+  //This chunck reads in the file and makes level objects based on the info gathered
   int index = 1;
   for (int i = 0; i < Integer.parseInt(levelFile[0]); i++) {
     String LN = levelFile[index++];
@@ -157,35 +174,27 @@ void draw() {
     timer.stopTime();
     deathSceen();
   }
-
+  
   if (!playerDead) {
-    player.addY(fixY(-keys[0][1]));
-    player.addX(fixX(-keys[1][1]));
-    player.addY(fixY(keys[2][1]));
-    player.addX(fixX(keys[3][1]));
+    player.addY(-keys[0][1]);
+    player.addX(-keys[1][1]);
+    player.addY(keys[2][1]);
+    player.addX(keys[3][1]);
 
-    x = fixX(-keys[1][1] + keys[3][1]);
-    y = fixY(-keys[0][1] + keys[2][1]);
+    x = -keys[1][1] + keys[3][1];
+    y = -keys[0][1] + keys[2][1];
   }
   
-  //if (!playerDead) {
-  //  player.addY(-keys[0][1]);
-  //  player.addX(-keys[1][1]);
-  //  player.addY(keys[2][1]);
-  //  player.addX(keys[3][1]);
-
-  //  x = -keys[1][1] + keys[3][1];
-  //  y = -keys[0][1] + keys[2][1];
-  //}
   timer.display();
   levelMenu.display();
   mainMenu.display();
   playAgainMenu.display();
   
-  for(int i = 0; i < tempIndex; i++){
-     fill(255,0,0);
-     ellipse(tempMOUSE[i][0],tempMOUSE[i][1],40,40);
-  }
+  //this was only used to help design the levels
+  //for(int i = 0; i < tempIndex; i++){
+  //   fill(255,0,0);
+  //   ellipse(tempMOUSE[i][0],tempMOUSE[i][1],40,40);
+  //}
 }
 
 float fixX(float x) {
@@ -195,6 +204,26 @@ float fixX(float x) {
 float fixY(float y) {
   return map(y, 0, 1080, 0, height);
 }
+
+//void inputUpdate() {
+//  for (int i = 0; i < keys.length; i++) {
+//    if (keys[i][0] == 1 && keys[i][1] < speedMax) {
+//      if (i % 2 == 0) {
+//        keys[i][1] += slideY;
+//      } else {
+//        keys[i][1] += slideX;
+//      }
+//    } else if (keys[i][1] > 0) {
+//        if (i % 2 == 0) {
+//          keys[i][1] -= slideY;
+//        } else {
+//          keys[i][1] -= slideX;
+//        }
+//    } else if (keys[i][1] < 0) {
+//      keys[i][1] = 0;
+//    }
+//  }
+//}
 
 void inputUpdate() {
   for (int i = 0; i < keys.length; i++) {
