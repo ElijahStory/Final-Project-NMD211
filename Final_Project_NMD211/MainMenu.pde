@@ -1,42 +1,50 @@
+//Elijah Story
+//12-8-2020
+
+/*
+This class is used just to make main menus that are shown once and that's it. 
+It has one button to begin the game. It has text explaining how the game is played. 
+It can be made to any size.
+*/
+
 class MainMenu{
-  private float x;
-  private float y;
-  private float mWidth;
-  private float mHeight;
-  private boolean down;
-  private float speed = 18;
-  private float startY;
-  private String text;
-  private Button button;
-  private float textS;
+  private float x;            //the X of the menu
+  private float y;            //the current Y of the menu
+  private float mWidth;       //the menu width
+  private float mHeight;      //the menu height
+  private boolean down;       //is the menu down
+  private float speed = 18;   //the speed the menu moves
+  private String text;        //the message on the menu
+  private Button button;      //the start button
+  private float textS;        //the font size
   
-  
+  //unassigned menu constructor. makes "empty" menu
   MainMenu(){
     x = width/2;
     y = height/2;
     mWidth = 500;
     mHeight = 400;
     down = false;
-    startY = y;
     speed = 18;
     text = " ";
     button = new Button();
     textS = 30;
   }
   
+  //assigned menu constructor. makes meun based on values passed from user
   MainMenu(float _x, float _y, float w, float h, boolean d, float s, String t, Button b, float ts){
     x = _x;
     y = _y;
     mWidth = w;
     mHeight = h;
     down = d;
-    startY = _y;
     speed = s;
     text = t;
     button = b;
     textS = ts;
   }
   
+  //getters and setters
   float getX() {
     return x;
   }
@@ -77,14 +85,6 @@ class MainMenu{
     down = d; 
   }
   
-  float getStartY() {
-    return startY;
-  }
-
-  void setStartY(float _y) {
-    startY = _y;
-  }
-  
   float getSpeed() {
     return speed;
   }
@@ -97,29 +97,24 @@ class MainMenu{
     return button; 
   }
   
+  //draws the menu
   void display(){
-    if(down){
-      fill(240,142,44);
-      stroke(191,111,31);
-      rect(x, y, mWidth, mHeight, 10);
-      fill(0);
-      textSize(textS);
-      text(text, x+mWidth/2, y+mHeight/2);
-      button.display();
-    }else{
+    fill(240,142,44);
+    stroke(191,111,31);
+    rect(x, y, mWidth, mHeight, 10);      //the menu itself
+    fill(0);
+    textSize(textS);
+    text(text, x+mWidth/2, y+mHeight/2);  //text on menu
+    button.display();                     //draw the button on menu
+    
+    if(!down){                            //if the button is not down, move menu down until out of sight
       if(y <= height+200){
          move(1);
       }
-      fill(240,142,44);
-      stroke(191,111,31);
-      rect(x, y, mWidth, mHeight, 10);
-      fill(0);
-      textSize(textS);
-      text(text, x+mWidth/2, y+mHeight/2);
-      button.display();
     }
   }
   
+  //updates the menus Y and the buttons Y
   private void move(int dir){
     y += speed*dir;
     button.addY(speed*dir);
