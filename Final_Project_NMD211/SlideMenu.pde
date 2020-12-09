@@ -1,14 +1,21 @@
+//Elijah Story
+//12-8-2020
+
+/*
+This class makes a menu that can hold buttons and can travel up and down.
+*/
+
 class SlideMenu{
-  private float x;
-  private float y;
-  private float mWidth;
-  private float mHeight;
-  private boolean down;
-  private Button[] items = new Button[0];
-  private float speed = 18;
-  private float startY;
+  private float x;                          //menu X
+  private float y;                          //menu Y
+  private float mWidth;                     //menu width
+  private float mHeight;                    //menu height
+  private boolean down;                     //is the menu down
+  private Button[] items = new Button[0];   //array that holds buttons in menu
+  private float speed;                      //speed the menu moves
+  private float startY;                     //where the menu is seen
   
-  
+  //unassigned menu constructor. makes "empty" menu
   SlideMenu(){
     x = width/2;
     y = height/2;
@@ -19,6 +26,7 @@ class SlideMenu{
     speed = 18;
   }
   
+  //assigned menu constructor. makes meun based on values passed from user
   SlideMenu(float _x, float _y, float w, float h, boolean d, float s){
     x = _x;
     y = -h;
@@ -28,7 +36,8 @@ class SlideMenu{
     startY = _y;
     speed = s;
   }
-  
+
+  //getters and setters
   float getX() {
     return x;
   }
@@ -89,10 +98,12 @@ class SlideMenu{
     return items; 
   }
   
+  //checks if the menu is out of sight
   boolean isAway(){
     return y <= -mHeight;
   }
   
+  //makes a new array 1 bigger than old. moves all items to new array
   private void increaseArray(Button[] old){
      Button[] newArray = new Button[old.length+1];
      for(int i = 0; i < old.length; i++){
@@ -101,35 +112,33 @@ class SlideMenu{
      items = newArray;
   }
   
+  //adds a new button to the button array
   void addItem(Button item){
-    increaseArray(items);
-    items[items.length-1] = item;
+    increaseArray(items);          //make array bigger
+    items[items.length-1] = item;  //add new button to the last index
   }
   
+  //draw the menu
   void display(){
-    if(down){
-      if(y <= startY){
-        move(1); 
-      }
-      fill(240,142,44);
-      stroke(191,111,31);
-      rect(x, y, mWidth, mHeight, 10);
-      for(int i = 0; i < items.length; i++){
-        items[i].display(); 
-      }
-    }else{
-      if(y >= -mHeight){
-         move(-1);
-      }
-      fill(240,142,44);
-      stroke(191,111,31);
-      rect(x, y, mWidth, mHeight, 10);
-      for(int i = 0; i < items.length; i++){
-        items[i].display(); 
+    fill(240,142,44);
+    stroke(191,111,31);
+    rect(x, y, mWidth, mHeight, 10);        //draws the menu itself
+    for(int i = 0; i < items.length; i++){  //draws all the buttons with the menu
+      items[i].display(); 
+    }
+      
+    if(down){            //if the menu needs to be DOWN
+      if(y <= startY){   //if the menu is not all the way DOWN
+        move(1);         //move it DOWN
+      }    
+    }else{               //if the menu needs to be UP
+      if(y >= -mHeight){ //if the menu is not all the way UP
+         move(-1);       //move it UP
       }
     }
   }
   
+  //moves the menu and all the buttons with it based on the speed and direction
   private void move(int dir){
     y += speed*dir;
     for(int i = 0; i < items.length; i++){
