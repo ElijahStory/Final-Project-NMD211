@@ -1,11 +1,19 @@
-class Timer {
-  private float x;
-  private float y;
-  private float size;
-  private String time;
-  private float startTime;
-  private boolean counting;
+//Elijah Story
+//12-8-2020
 
+/*
+
+*/
+
+class Timer {
+  private float x;          //timer X for display
+  private float y;          //timer Y for display
+  private float size;       //font size
+  private String time;      //time to be displayed
+  private float startTime;  //when the timer was started
+  private boolean counting; //is the timer counting
+
+  //unassigned timer constructor. makes "empty" timer
   Timer() {
     x = 0;
     y = 0;
@@ -14,6 +22,7 @@ class Timer {
     counting = false;
   }
 
+  //assigned timer constructor. makes timer based on values passed from user
   Timer(float _x, float _y, float s) {
     x = _x;
     y = _y;

@@ -31,7 +31,7 @@ class MainMenu{
     textS = 30;
   }
   
-  //assigned menu constructor. makes meun based on values passed from user
+  //assigned menu constructor. makes menu based on values passed from user
   MainMenu(float _x, float _y, float w, float h, boolean d, float s, String t, Button b, float ts){
     x = _x;
     y = _y;

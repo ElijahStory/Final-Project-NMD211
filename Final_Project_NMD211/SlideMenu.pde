@@ -26,7 +26,7 @@ class SlideMenu{
     speed = 18;
   }
   
-  //assigned menu constructor. makes meun based on values passed from user
+  //assigned menu constructor. makes menu based on values passed from user
   SlideMenu(float _x, float _y, float w, float h, boolean d, float s){
     x = _x;
     y = -h;
