@@ -2,7 +2,9 @@
 //12-8-2020
 
 /*
-
+This is a timer class. The timer counts minutes, seconds, and milliseconds. 
+You can start and stop only once. Once the timer is started again, it starts over. 
+The class can compare a time of the same format with the time in timer and will return the faster time.
 */
 
 class Timer {
@@ -31,6 +33,7 @@ class Timer {
     counting = false;
   }
 
+  //getters and setters
   float getX() {
     return x;
   }
@@ -63,44 +66,47 @@ class Timer {
     time = t;
   }
 
+  //starts the timer
   void startTime() {
-    startTime = millis();
-    counting = true;
+    startTime = millis();  //records current time
+    counting = true;       //say timer is running
   }
 
   void stopTime() {
-    counting = false;
+    counting = false;      //say timer is NOT running
   }
   
+  //checks to see if the time stored in timer is faster than provided
   String compare(String check){
-    String[] top = split(check,":");
-    String[] cur = split(time,":");
-    if(!check.equals("--:--:--")){
-      if(Integer.parseInt(cur[0]) < Integer.parseInt(top[0])){
+    String[] top = split(check,":");  //splits the numbers and stores in array
+    String[] cur = split(time,":");   //splits the numbers and stores in array
+    if(!check.equals("--:--:--")){    //if the given time is NOT empty
+      if(Integer.parseInt(cur[0]) < Integer.parseInt(top[0])){        //check if the timers minutes is faster(less than) given time
         return time;
-      }else if(Integer.parseInt(cur[1]) < Integer.parseInt(top[1])){
+      }else if(Integer.parseInt(cur[1]) < Integer.parseInt(top[1])){  //check if the timers seconds is faster(less than) given time
         return time;
-      }else if(Integer.parseInt(cur[1]) == Integer.parseInt(top[1])){
-        if(Integer.parseInt(cur[2]) < Integer.parseInt(top[2])){
+      }else if(Integer.parseInt(cur[1]) == Integer.parseInt(top[1])){ //must make sure the seconds are same to check milliseconds
+        if(Integer.parseInt(cur[2]) < Integer.parseInt(top[2])){      //check if the timers milliseconds is faster(less than) given time
           return time;
         }
       }
-        return check; 
+        return check;                                                 //the time passed in was faster than timer
     }
     return time;
   }
 
+  //draw the timer
   void display() {
-    if (counting) {
-      float curTime = millis();
-      String[] temp = split(time, ':');
-      temp[2] = str(floor((curTime-startTime)/10)%100);
-      temp[1] = str((int)((curTime-startTime)/1000)%60);
-      temp[0] = str((int)((curTime-startTime)/(1000*60))%60);
-      time = join(temp,":");
+    if (counting) {                                          //if the timer is ON, update
+      float curTime = millis();                              //get current time
+      String[] temp = split(time, ':');                      //splits the numbers and stores in array
+      temp[2] = str(floor((curTime-startTime)/10)%100);      //update milliseconds
+      temp[1] = str((int)((curTime-startTime)/1000)%60);     //update seconds
+      temp[0] = str((int)((curTime-startTime)/(1000*60))%60);//update minutes
+      time = join(temp,":");                                 //turns array back into string 
     }
     fill(0);
     textSize(size);
-    text(time, x, y);
+    text(time, x, y);                                        //display the timer
   }
 }
