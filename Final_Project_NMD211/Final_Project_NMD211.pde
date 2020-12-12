@@ -402,7 +402,7 @@ void keyReleased() {
 
 void mousePressed() {
   //this chunk was used to help design the levels. It printed out where the mouse was clicked and added cords to draw a dot
-  //println("\n\nNEW ENTRY==========="+(tempIndex-1));
+  //println("\n\nNEW ENTRY==========="+(tempIndex+1));
   //tempMOUSE[tempIndex][0] = mouseX;
   //tempMOUSE[tempIndex][1] = mouseY;
   //tempIndex++;
