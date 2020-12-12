@@ -13,6 +13,8 @@ This means that it should look and play the same no matter what size screen it i
 #One potential flaw is that the penguin seems to move at different speeds when I play it on my desktop(Windows),
 and when I play it on my laptop(Mac). The screens are different sizes. The game looks good on both, it's just the speed that seems to change.#
 
+More info can be found on GitHub: https://github.com/ElijahStory/Final-Project-NMD211
+
 The goal of the game is to reach the fish as fast as possible without sliding off the iceberg or into a hole. 
 Each level is locked(other than the first one) and will only be unlocked once the previous level is won. 
 Each unlocked level can be replayed multiple times to try and better the score.
