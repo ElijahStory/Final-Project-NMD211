@@ -4,6 +4,7 @@ Below is a picture of all the wiring involved for the GY-521 Module. The vcc get
 <img src="images/wiring-controller.jpg" width = 640>
 
 When using the “controller”, the side of the GY-521 board with the pins needs to point to the right side of the monitor. The VCC pin on the GY-521 needs to be closer to the user and away from the monitor. This gives us the proper orientation and will make the penguin move in the direction desired. A picture of this is below.
+
 <img src="images/controller-orientation.jpg" height = 640>
 
 ## 2.
