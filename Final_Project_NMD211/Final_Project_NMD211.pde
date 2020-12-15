@@ -70,7 +70,7 @@ void setup() {
   
   //printArray(Serial.list());                                 //Used to find what usb Arduino is in
   //myPort = new Serial(this,"COM5",9600);                     //makes the Serial instance    #### windows
-  //myPort = new Serial(this,"/dev/cu.usbmodem142101",9600);   //makes the Serial instance    #### mac
+  //myPort = new Serial(this,"/dev/cu.usbmodem141101",9600);   //makes the Serial instance    #### mac
   //myPort.bufferUntil('\n');                                  //tells the serial when to say it has all the info
 
 
